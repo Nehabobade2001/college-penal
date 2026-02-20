@@ -73,3 +73,51 @@ export const centerAPI = {
     return res.json()
   },
 }
+
+export const studentAPI = {
+  list: async (token?: string) => {
+    const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
+    const res = await fetch(`${API_URL}/students`, {
+      headers: authToken ? { Authorization: `Bearer ${authToken}` } : undefined,
+    })
+    return res.json()
+  },
+
+  create: async (payload: any, token?: string) => {
+    const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
+    const res = await fetch(`${API_URL}/students`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+      body: JSON.stringify(payload),
+    })
+    return res.json()
+  },
+
+  update: async (id: number, payload: any, token?: string) => {
+    const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
+    const res = await fetch(`${API_URL}/students/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+      body: JSON.stringify(payload),
+    })
+    return res.json()
+  },
+
+  deactivate: async (id: number, token?: string) => {
+    const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
+    const res = await fetch(`${API_URL}/students/${id}/deactivate`, {
+      method: 'PATCH',
+      headers: { ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+    })
+    return res.json()
+  },
+
+  activate: async (id: number, token?: string) => {
+    const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
+    const res = await fetch(`${API_URL}/students/${id}/activate`, {
+      method: 'PATCH',
+      headers: { ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+    })
+    return res.json()
+  },
+}

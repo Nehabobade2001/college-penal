@@ -50,7 +50,7 @@ const SidebarContent: MenuItem[] = [
     heading: 'Statistics',
     children: [
       { id: uniqueId(), name: 'Total Centers', icon: 'solar:chart-line-duotone', url: '/apps/centers', disabled: false },
-      { id: uniqueId(), name: 'Total Students', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
+      { id: uniqueId(), name: 'Total Students', icon: 'solar:chart-line-duotone', url: '/apps/students', disabled: false },
       { id: uniqueId(), name: 'Active Courses', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
       { id: uniqueId(), name: 'Monthly Admissions', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
       { id: uniqueId(), name: 'Total Revenue (All Centers)', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
