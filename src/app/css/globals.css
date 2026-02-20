@@ -153,6 +153,31 @@ main {
     @apply text-dark dark:text-white font-semibold;
   }
 
+  /* Dashboard specific tweaks: darker panels and higher contrast tables */
+  .main-dashboard {
+    @apply bg-[#0b1220]/80 rounded-md p-6;
+  }
+
+  .dashboard-table thead th {
+    background: rgba(255,255,255,0.96);
+    color: #0b1220 !important;
+    @apply text-sm font-medium;
+  }
+
+  .dashboard-table tbody td {
+    color: rgba(203,213,225,0.9); /* slate-300 */
+    border-top: 1px solid rgba(255,255,255,0.03);
+    padding: 0.75rem;
+  }
+
+  .dashboard-actions button {
+    @apply px-3 py-1 text-sm rounded;
+  }
+
+  .dashboard-add-btn {
+    @apply bg-primary text-white px-4 py-2 rounded-md;
+  }
+
   input::placeholder {
     @apply text-darklink dark:text-darklink
   }

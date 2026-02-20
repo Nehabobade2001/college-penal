@@ -8,44 +8,32 @@ import Link from "next/link";
 
 const page = () => {
   return (
-    <>
-      <div className="grid grid-cols-12 gap-30">
-        <div className="lg:col-span-8 col-span-12">
-          <RevenueForecast />
-        </div>
-        <div className="lg:col-span-4 col-span-12">
-          <div className="grid grid-cols-12 h-full items-stretch">
-            <div className="col-span-12 mb-30">
-              <NewCustomers />
-            </div>
-            <div className="col-span-12">
-              <TotalIncome />
-            </div>
-          </div>
-        </div>
-        <div className="lg:col-span-8 col-span-12">
-          <ProductRevenue />
-        </div>
-        <div className="lg:col-span-4 col-span-12">
-          <DailyActivity />
-        </div>
-        <div className="col-span-12">
-          <BlogCards />
-        </div>
-        <div className="col-span-12 text-center">
-          <p className="text-base">
-            Design and Developed by{" "}
-            <Link
-              href="https://adminmart.com/"
-              target="_blank"
-              className="pl-1 text-primary underline decoration-primary"
-            >
-              adminmart.com
-            </Link>
-          </p>
+    <div className="grid grid-cols-12 gap-30">
+      <div className="col-span-12 lg:col-span-3">
+        <div className="bg-white dark:bg-darkgray p-6 rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">Total Students</h3>
+          <p className="text-3xl font-bold text-primary">0</p>
         </div>
       </div>
-    </>
+      <div className="col-span-12 lg:col-span-3">
+        <div className="bg-white dark:bg-darkgray p-6 rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">Active Courses</h3>
+          <p className="text-3xl font-bold text-success">0</p>
+        </div>
+      </div>
+      <div className="col-span-12 lg:col-span-3">
+        <div className="bg-white dark:bg-darkgray p-6 rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">Monthly Admissions</h3>
+          <p className="text-3xl font-bold text-warning">0</p>
+        </div>
+      </div>
+      <div className="col-span-12 lg:col-span-3">
+        <div className="bg-white dark:bg-darkgray p-6 rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">Total Fees</h3>
+          <p className="text-3xl font-bold text-error">₹0</p>
+        </div>
+      </div>
+    </div>
   );
 };
 

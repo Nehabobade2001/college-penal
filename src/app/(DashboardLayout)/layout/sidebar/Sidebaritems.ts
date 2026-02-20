@@ -42,77 +42,19 @@ const SidebarContent: MenuItem[] = [
         url: "/",
         isPro: false
       },
-      {
-        name: "Dashboard1",
-        icon: "solar:widget-add-line-duotone",
-        id: uniqueId(),
-        url: "https://matdash-nextjs-main.vercel.app/",
-        isPro: true
-      },
-      {
-        name: "Dashboard2",
-        icon: "solar:chart-line-duotone",
-        id: uniqueId(),
-        url: "https://matdash-nextjs-main.vercel.app/dashboards/dashboard2",
-        isPro: true
-      },
-      {
-        name: "Dashboard3",
-        icon: "solar:screencast-2-line-duotone",
-        id: uniqueId(),
-        url: "https://matdash-nextjs-main.vercel.app/dashboards/dashboard3",
-        isPro: true
-      },
-      {
-        name: 'Front Pages',
-        id: uniqueId(),
-        icon: 'solar:home-angle-linear',
-        url: '#',
-        children: [
-          {
-            name: "Homepage",
-            id: uniqueId(),
-            url: "https://matdash-nextjs-main.vercel.app/frontend-pages/homepage",
-            isPro: true
-          },
-          {
-            name: "About Us",
-            id: uniqueId(),
-            url: "https://matdash-nextjs-main.vercel.app/frontend-pages/aboutus",
-            isPro: true
-          },
-          {
-            name: "Blog",
-            id: uniqueId(),
-            url: "https://matdash-nextjs-main.vercel.app/frontend-pages/blog",
-            isPro: true
-          },
-          {
-            name: "Blog Details",
-            id: uniqueId(),
-            url: "https://matdash-nextjs-main.vercel.app/frontend-pages/blog/detail/streaming-video-way-before-it-was-cool-go-dark-tomorrow",
-            isPro: true
-          },
-          {
-            name: "Contact Us",
-            id: uniqueId(),
-            url: "https://matdash-nextjs-main.vercel.app/frontend-pages/contact",
-            isPro: true
-          },
-          {
-            name: "Portfolio",
-            id: uniqueId(),
-            url: "https://matdash-nextjs-main.vercel.app/frontend-pages/portfolio",
-            isPro: true
-          },
-          {
-            name: "Pricing",
-            id: uniqueId(),
-            url: "https://matdash-nextjs-main.vercel.app/frontend-pages/pricing",
-            isPro: true
-          },
-        ],
-      },
+      // Removed extra dashboards and front pages — replaced by Statistics section below
+    ],
+  },
+
+  {
+    heading: 'Statistics',
+    children: [
+      { id: uniqueId(), name: 'Total Centers', icon: 'solar:chart-line-duotone', url: '/apps/centers', disabled: false },
+      { id: uniqueId(), name: 'Total Students', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
+      { id: uniqueId(), name: 'Active Courses', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
+      { id: uniqueId(), name: 'Monthly Admissions', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
+      { id: uniqueId(), name: 'Total Revenue (All Centers)', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
+      { id: uniqueId(), name: 'Pending Complaints', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
     ],
   },
   {
@@ -144,6 +86,7 @@ const SidebarContent: MenuItem[] = [
       },
     ],
   },
+  // AI section removed and replaced by Statistics section
   {
     heading: 'Utilities',
     children: [
@@ -180,6 +123,7 @@ const SidebarContent: MenuItem[] = [
       },
     ],
   },
+  // Utilities section removed and replaced by Statistics section
   {
     heading: 'Apps',
     children: [
