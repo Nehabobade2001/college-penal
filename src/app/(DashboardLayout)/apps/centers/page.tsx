@@ -84,36 +84,42 @@ export default function CentersPage() {
             <table className='w-full table-auto border dashboard-table'>
               <thead>
                 <tr className='bg-gray-100'>
-                  <th className='p-2 text-left'>Name</th>
+                  <th className='p-2 text-left'>S.No</th>
+                  <th className='p-2 text-left'>Franchise Name</th>
                   <th className='p-2 text-left'>Address</th>
-                  <th className='p-2 text-left'>Phone</th>
+                  <th className='p-2 text-left'>Contact Number</th>
                   <th className='p-2 text-left'>Email</th>
                   <th className='p-2 text-left'>Active</th>
                   <th className='p-2 text-left'>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {centers.map((c) => (
-                  <tr key={c.id} className='border-t'>
-                    <td className='p-2'>{c.name}</td>
-                    <td className='p-2'>{c.address}</td>
-                    <td className='p-2'>{c.phone}</td>
-                    <td className='p-2'>{c.email}</td>
-                    <td className='p-2'>{String(c.isActive)}</td>
-                    <td className='p-2 flex gap-2 dashboard-actions'>
-                      <Button variant='outline' size='sm' onClick={() => router.push(`/apps/centers/new?id=${c.id}`)} disabled={!!actionLoading[c.id]}>Edit</Button>
-                      {c.isActive ? (
-                        <Button variant='destructive' size='sm' onClick={() => handleDeactivate(c.id)} disabled={!!actionLoading[c.id]}>
-                          {actionLoading[c.id] ? '...' : 'Deactivate'}
-                        </Button>
-                      ) : (
-                        <Button variant='success' size='sm' onClick={() => handleActivate(c.id)} disabled={!!actionLoading[c.id]}>
-                          {actionLoading[c.id] ? '...' : 'Activate'}
-                        </Button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {centers.length === 0 ? (
+                  <tr><td colSpan={7} className='p-4'>No centers found.</td></tr>
+                ) : (
+                  centers.map((c, idx) => (
+                    <tr key={c.id} className='border-t'>
+                      <td className='p-2'>{idx + 1}</td>
+                      <td className='p-2'>{(c as any).franchiseName || c.name}</td>
+                      <td className='p-2'>{c.address || ''}</td>
+                      <td className='p-2'>{(c as any).contactNumber || c.phone || ''}</td>
+                      <td className='p-2'>{c.email}</td>
+                      <td className='p-2'>{String(c.isActive)}</td>
+                      <td className='p-2 flex gap-2 dashboard-actions'>
+                        <Button variant='outline' size='sm' onClick={() => router.push(`/apps/centers/new?id=${c.id}`)} disabled={!!actionLoading[c.id]}>Edit</Button>
+                        {c.isActive ? (
+                          <Button variant='destructive' size='sm' onClick={() => handleDeactivate(c.id)} disabled={!!actionLoading[c.id]}>
+                            {actionLoading[c.id] ? '...' : 'Deactivate'}
+                          </Button>
+                        ) : (
+                          <Button variant='success' size='sm' onClick={() => handleActivate(c.id)} disabled={!!actionLoading[c.id]}>
+                            {actionLoading[c.id] ? '...' : 'Activate'}
+                          </Button>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

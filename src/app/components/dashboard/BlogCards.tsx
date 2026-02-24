@@ -79,7 +79,7 @@ const BlogCards = () => {
 
                 {/* Category Badge */}
                 <Badge variant={"gray"} className="mt-6">
-                  {item.category}
+                  {typeof item.category === 'object' ? (item.category?.name ?? item.category?.code ?? JSON.stringify(item.category)) : item.category}
                 </Badge>
 
                 {/* Title */}

@@ -45,6 +45,7 @@ const SidebarContent: MenuItem[] = [
       // Removed extra dashboards and front pages — replaced by Statistics section below
     ],
   },
+  
 
   {
     heading: 'Statistics',
@@ -58,34 +59,18 @@ const SidebarContent: MenuItem[] = [
     ],
   },
   {
-    heading: 'AI',
+    heading: 'Master Management',
     children: [
-      {
-        name: 'Ai Table Builder',
-        icon: 'solar:server-linear',
-        id: uniqueId(),
-        url: 'https://tailwindbuilder.ai/table-builder',
-        isPro: false,
-
-      },
-      {
-        name: 'Ai Form Builder',
-        icon: 'solar:document-add-linear',
-        id: uniqueId(),
-        url: 'https://tailwindbuilder.ai/form-builder',
-        isPro: false,
-
-      },
-      {
-        id: uniqueId(),
-        name: 'Ai Chart Builder',
-        icon: 'solar:pie-chart-2-linear',
-        url: 'https://tailwindbuilder.ai/chart-builder',
-        isPro: false,
-
-      },
+      { id: uniqueId(), name: 'Categories', icon: 'solar:folder-line', url: '/masters/categories', isPro: false },
+      { id: uniqueId(), name: 'Departments', icon: 'solar:building-line', url: '/masters/departments', isPro: false },
+      { id: uniqueId(), name: 'Programs (Names & Codes)', icon: 'solar:book-open-line', url: '/masters/programs', isPro: false },
+      { id: uniqueId(), name: 'Streams', icon: 'solar:flow-line', url: '/masters/streams', isPro: false },
+      { id: uniqueId(), name: 'Subjects', icon: 'solar:pencil-line', url: '/masters/subjects', isPro: false },
+      { id: uniqueId(), name: 'Specializations', icon: 'solar:star-line', url: '/masters/specializations', isPro: false },
+      { id: uniqueId(), name: 'Addresses', icon: 'solar:map-pin-line', url: '/masters/addresses', isPro: false },
     ],
   },
+ 
   // AI section removed and replaced by Statistics section
   {
     heading: 'Utilities',

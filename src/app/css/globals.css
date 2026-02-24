@@ -153,9 +153,13 @@ main {
     @apply text-dark dark:text-white font-semibold;
   }
 
-  /* Dashboard specific tweaks: darker panels and higher contrast tables */
+  /* Dashboard specific tweaks: light cards in light mode, dark panels in dark mode */
   .main-dashboard {
-    @apply bg-[#0b1220]/80 rounded-md p-6;
+    @apply bg-white text-dark rounded-md p-6;
+  }
+
+  .dark .main-dashboard {
+    @apply bg-[#0b1220]/80 text-white;
   }
 
   .dashboard-table thead th {
@@ -164,10 +168,20 @@ main {
     @apply text-sm font-medium;
   }
 
+  .dark .dashboard-table thead th {
+    background: rgba(255,255,255,0.06);
+    color: #e5e7eb !important;
+  }
+
   .dashboard-table tbody td {
-    color: rgba(203,213,225,0.9); /* slate-300 */
-    border-top: 1px solid rgba(255,255,255,0.03);
+    color: rgba(17,24,39,0.9); /* dark text for light mode */
+    border-top: 1px solid rgba(0,0,0,0.06);
     padding: 0.75rem;
+  }
+
+  .dark .dashboard-table tbody td {
+    color: rgba(203,213,225,0.9); /* slate-300 for dark mode */
+    border-top: 1px solid rgba(255,255,255,0.03);
   }
 
   .dashboard-actions button {
@@ -176,6 +190,53 @@ main {
 
   .dashboard-add-btn {
     @apply bg-primary text-white px-4 py-2 rounded-md;
+  }
+
+  /* Shared form card used across dashboard forms */
+  .form-card {
+    @apply bg-white text-dark p-6 rounded-lg shadow-sm border border-defaultBorder;
+  }
+
+  /* Dark mode override */
+  .dark .form-card {
+    @apply bg-slate-900 text-white;
+  }
+
+  /* Ensure form controls inside form-card are light in light mode, dark in dark mode */
+  .form-card input,
+  .form-card select,
+  .form-card textarea {
+    @apply bg-white text-dark border border-defaultBorder rounded-md p-3;
+  }
+
+  .form-card input::placeholder,
+  .form-card textarea::placeholder {
+    @apply text-muted;
+  }
+
+  .dark .form-card input,
+  .dark .form-card select,
+  .dark .form-card textarea {
+    @apply bg-slate-800 text-white border border-slate-700;
+  }
+
+  /* Explicit utility classes for form controls inside .form-card */
+  .form-card .form-input {
+    @apply w-full p-3 rounded-md border border-defaultBorder bg-white text-dark text-sm placeholder-muted;
+  }
+
+  .form-card .form-select {
+    @apply w-full p-3 rounded-md border border-defaultBorder bg-white text-dark text-sm;
+  }
+
+  .form-card .form-textarea {
+    @apply w-full p-4 rounded-md border border-defaultBorder bg-white text-dark text-sm;
+  }
+
+  .dark .form-card .form-input,
+  .dark .form-card .form-select,
+  .dark .form-card .form-textarea {
+    @apply bg-slate-800 text-white border-slate-700;
   }
 
   input::placeholder {

@@ -64,7 +64,7 @@ export default function StudentsPage() {
   return (
     <div className='p-6 main-dashboard'>
       <div className='flex items-center justify-between mb-4'>
-        <h1 className='text-2xl font-semibold text-white'>Students</h1>
+        <h1 className='text-2xl font-semibold text-dark'>Students</h1>
         <div className='flex gap-2'>
           <Link href='/apps/students/new'>
             <Button className='dashboard-add-btn'>Add Student</Button>
@@ -84,42 +84,52 @@ export default function StudentsPage() {
             <table className='w-full table-auto border dashboard-table'>
               <thead>
                 <tr className='bg-gray-100'>
+                  <th className='p-2 text-left'>S.No</th>
                   <th className='p-2 text-left'>Name</th>
+                  <th className='p-2 text-left'>Enrollment</th>
+                  <th className='p-2 text-left'>Course</th>
+                  <th className='p-2 text-left'>Mobile</th>
                   <th className='p-2 text-left'>Email</th>
                   <th className='p-2 text-left'>Status</th>
                   <th className='p-2 text-left'>Document</th>
-                  <th className='p-2 text-left'>Active</th>
                   <th className='p-2 text-left'>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {students.map((s) => (
-                  <tr key={s.id} className='border-t'>
-                    <td className='p-2'>{s.name}</td>
-                    <td className='p-2'>{s.email}</td>
-                    <td className='p-2'>{s.status}</td>
-                    <td className='p-2'>
-                      {s.documentUrl ? (
-                        <a className='text-blue-400 underline' href={s.documentUrl} target='_blank' rel='noreferrer'>View</a>
-                      ) : (
-                        '-'
-                      )}
-                    </td>
-                    <td className='p-2'>{String(s.isActive)}</td>
-                    <td className='p-2 flex gap-2 dashboard-actions'>
-                      <Button variant='outline' size='sm' onClick={() => router.push(`/apps/students/new?id=${s.id}`)} disabled={!!actionLoading[s.id]}>Edit</Button>
-                      {s.isActive ? (
-                        <Button variant='destructive' size='sm' onClick={() => handleDeactivate(s.id)} disabled={!!actionLoading[s.id]}>
-                          {actionLoading[s.id] ? '...' : 'Deactivate'}
-                        </Button>
-                      ) : (
-                        <Button variant='success' size='sm' onClick={() => handleActivate(s.id)} disabled={!!actionLoading[s.id]}>
-                          {actionLoading[s.id] ? '...' : 'Activate'}
-                        </Button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {students.length === 0 ? (
+                  <tr><td colSpan={9} className='p-4'>No students found.</td></tr>
+                ) : (
+                  students.map((s, idx) => (
+                    <tr key={s.id} className='border-t'>
+                      <td className='p-2'>{idx + 1}</td>
+                      <td className='p-2'>{((s.firstName || s.name) + ' ' + (s.lastName || '')).trim()}</td>
+                      <td className='p-2'>{s.enrollmentNumber || s.enrollNo || ''}</td>
+                      <td className='p-2'>{s.courseName || s.course || ''}</td>
+                      <td className='p-2'>{s.mobileNumber || s.mobile || ''}</td>
+                      <td className='p-2'>{s.email || ''}</td>
+                      <td className='p-2'>{s.status || ''}</td>
+                      <td className='p-2'>
+                        {s.previousMarksheet || s.previousMarksheetUrl || s.profilePhoto || s.documentUrl ? (
+                          <a className='text-blue-400 underline' href={s.previousMarksheet || s.previousMarksheetUrl || s.profilePhoto || s.documentUrl} target='_blank' rel='noreferrer'>View</a>
+                        ) : (
+                          '-'
+                        )}
+                      </td>
+                      <td className='p-2 flex gap-2 dashboard-actions'>
+                        <Button variant='outline' size='sm' onClick={() => router.push(`/apps/students/new?id=${s.id}`)} disabled={!!actionLoading[s.id]}>Edit</Button>
+                        {s.isActive ? (
+                          <Button variant='destructive' size='sm' onClick={() => handleDeactivate(s.id)} disabled={!!actionLoading[s.id]}>
+                            {actionLoading[s.id] ? '...' : 'Deactivate'}
+                          </Button>
+                        ) : (
+                          <Button variant='success' size='sm' onClick={() => handleActivate(s.id)} disabled={!!actionLoading[s.id]}>
+                            {actionLoading[s.id] ? '...' : 'Activate'}
+                          </Button>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
