@@ -95,13 +95,13 @@ export default function NewCenterPage() {
 
   return (
     <div className='p-6 main-dashboard'>
-      <h1 className='text-2xl font-semibold mb-4 text-white'>{editingId ? 'Edit Center' : 'Add New Center'}</h1>
+      <h1 className='text-2xl font-semibold mb-4 text-dark dark:text-white'>{editingId ? 'Edit Center' : 'Add New Center'}</h1>
       {error && <div className='mb-4 p-2 bg-red-100 text-red-700 rounded'>{error}</div>}
 
       <form onSubmit={handleSubmit} className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-6'>
         <div className='md:col-span-3'>
-          <h2 className='text-lg font-semibold text-white mb-1'>Franchise — Basic Info</h2>
-          <p className='text-sm text-slate-400 mb-3'>Primary contact and identification details for the franchise.</p>
+          <h2 className='text-lg font-semibold text-dark dark:text-white mb-1'>Franchise — Basic Info</h2>
+          <p className='text-sm text-gray-500 mb-3'>Primary contact and identification details for the franchise.</p>
         </div>
 
         <Input placeholder='Franchise Name' value={form.franchiseName} onChange={(e: any) => setForm({ ...form, franchiseName: e.target.value })} required />
@@ -111,8 +111,8 @@ export default function NewCenterPage() {
         <Input placeholder='Alternate Number' value={form.alternateNumber} onChange={(e: any) => setForm({ ...form, alternateNumber: e.target.value })} />
 
         <div className='md:col-span-3'>
-          <h2 className='text-lg font-semibold text-white mb-1'>Location</h2>
-          <p className='text-sm text-slate-400 mb-3'>Address and geographic details.</p>
+          <h2 className='text-lg font-semibold text-dark dark:text-white mb-1'>Location</h2>
+          <p className='text-sm text-gray-500 mb-3'>Address and geographic details.</p>
         </div>
 
         <Input placeholder='Address' value={form.address} onChange={(e: any) => setForm({ ...form, address: e.target.value })} />
@@ -121,8 +121,8 @@ export default function NewCenterPage() {
         <Input placeholder='Pincode' value={form.pincode} onChange={(e: any) => setForm({ ...form, pincode: e.target.value })} />
 
         <div className='md:col-span-3'>
-          <h2 className='text-lg font-semibold text-white mb-1'>Legal Info</h2>
-          <p className='text-sm text-slate-400 mb-3'>Registration and agreement dates.</p>
+          <h2 className='text-lg font-semibold text-dark dark:text-white mb-1'>Legal Info</h2>
+          <p className='text-sm text-gray-500 mb-3'>Registration and agreement dates.</p>
         </div>
 
         <Input placeholder='Registration Number' value={form.registrationNumber} onChange={(e: any) => setForm({ ...form, registrationNumber: e.target.value })} />

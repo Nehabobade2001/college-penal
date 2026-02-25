@@ -38,7 +38,7 @@ export default function NewAddressPage() {
         setCountry(a.country || '')
         setDescription(a.description || '')
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   useEffect(() => { if (id) fetchAddress(id) }, [id])
@@ -62,54 +62,54 @@ export default function NewAddressPage() {
     <div className="p-6 max-w-3xl">
       <div className="form-card">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-semibold text-white">{id ? 'Edit Address' : 'Add New Address'}</h1>
+          <h1 className="text-2xl font-semibold">{id ? 'Edit Address' : 'Add New Address'}</h1>
         </div>
 
         {error && <div className='mb-4 p-3 bg-red-100 text-red-700 rounded'>{error}</div>}
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
-            <label className='block mb-2 text-sm text-slate-300'>Name / Label</label>
+            <label className='block mb-2 text-sm form-label'>Name / Label</label>
             <input value={name} onChange={(e) => setName(e.target.value)} placeholder='e.g. Head Office' className='form-input' />
           </div>
 
           <div>
-            <label className='block mb-2 text-sm text-slate-300'>Type</label>
+            <label className='block mb-2 text-sm form-label'>Type</label>
             <input value={type} onChange={(e) => setType(e.target.value)} placeholder='Office / Branch / Home' className='form-input' />
           </div>
 
           <div>
-            <label className='block mb-2 text-sm text-slate-300'>City</label>
+            <label className='block mb-2 text-sm form-label'>City</label>
             <input value={city} onChange={(e) => setCity(e.target.value)} placeholder='City' className='form-input' />
           </div>
 
           <div className='md:col-span-2'>
-            <label className='block mb-2 text-sm text-slate-300'>Address Line 1</label>
+            <label className='block mb-2 text-sm form-label'>Address Line 1</label>
             <input value={addressLine1} onChange={(e) => setAddressLine1(e.target.value)} placeholder='Address line 1' className='form-input' />
           </div>
 
           <div className='md:col-span-2'>
-            <label className='block mb-2 text-sm text-slate-300'>Address Line 2</label>
+            <label className='block mb-2 text-sm form-label'>Address Line 2</label>
             <input value={addressLine2} onChange={(e) => setAddressLine2(e.target.value)} placeholder='Address line 2' className='form-input' />
           </div>
 
           <div>
-            <label className='block mb-2 text-sm text-slate-300'>State</label>
+            <label className='block mb-2 text-sm form-label'>State</label>
             <input value={stateVal} onChange={(e) => setStateVal(e.target.value)} placeholder='State' className='form-input' />
           </div>
 
           <div>
-            <label className='block mb-2 text-sm text-slate-300'>Pincode</label>
+            <label className='block mb-2 text-sm form-label'>Pincode</label>
             <input value={pincode} onChange={(e) => setPincode(e.target.value)} placeholder='Pincode' className='form-input' />
           </div>
 
           <div>
-            <label className='block mb-2 text-sm text-slate-300'>Country</label>
+            <label className='block mb-2 text-sm form-label'>Country</label>
             <input value={country} onChange={(e) => setCountry(e.target.value)} placeholder='Country' className='form-input' />
           </div>
 
           <div className='md:col-span-2'>
-            <label className='block mb-2 text-sm text-slate-300'>Notes</label>
+            <label className='block mb-2 text-sm form-label'>Notes</label>
             <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder='Optional notes' className='form-textarea' rows={3} />
           </div>
 

@@ -39,7 +39,6 @@ export default function CategoriesPage() {
     fetchCategories()
   }, [])
 
-
   const openEdit = (cat: Category) => {
     router.push(`/masters/categories/new?id=${cat.id}`)
   }
@@ -89,57 +88,56 @@ export default function CategoriesPage() {
   }
 
   return (
-    <div className="p-6 main-dashboard">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-semibold text-dark">Master - Categories</h1>
-        <div className="flex gap-2">
-          <Link href="/masters/categories/new">
-            <Button className="dashboard-add-btn">Add New Category</Button>
-          </Link>
-        </div>
+    <div className='listing-page'>
+      <div className='listing-header'>
+        <h1 className='listing-title'>Master – Categories</h1>
+        <Link href='/masters/categories/new'>
+          <Button className='dashboard-add-btn'>Add New Category</Button>
+        </Link>
       </div>
 
-      {error && <div className='mb-4 p-2 bg-red-100 text-red-700 rounded'>{error}</div>}
-      {message && <div className='mb-4 p-2 bg-green-100 text-green-800 rounded'>{message}</div>}
+      {error && <div className='listing-alert-error'>{error}</div>}
+      {message && <div className='listing-alert-success'>{message}</div>}
 
-      <div>
-        <h2 className='text-lg font-medium mb-2'>All Categories</h2>
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <div className='overflow-auto'>
-            <table className='w-full table-auto border dashboard-table'>
-              <thead>
-                <tr className='bg-gray-100'>
-                  <th className='p-2 text-left'>Name</th>
-                  <th className='p-2 text-left'>Code</th>
-                  <th className='p-2 text-left'>Description</th>
-                  <th className='p-2 text-left'>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {categories.length === 0 ? (
-                  <tr><td colSpan={4} className='p-4'>No categories found.</td></tr>
-                ) : (
-                  categories.map((cat) => (
-                    <tr key={cat.id} className='border-t'>
-                      <td className='p-2'>{cat.name}</td>
-                      <td className='p-2'>{cat.code}</td>
-                      <td className='p-2'>{cat.description}</td>
-                      <td className='p-2 flex gap-2 dashboard-actions'>
+      <p className='listing-subtitle'>All Categories</p>
+
+      {loading ? (
+        <div className='listing-loading'>Loading...</div>
+      ) : (
+        <div className='listing-card overflow-x-auto'>
+          <table className='listing-table'>
+            <thead className='listing-thead'>
+              <tr>
+                <th className='listing-th'>S.No</th>
+                <th className='listing-th'>Name</th>
+                <th className='listing-th'>Code</th>
+                <th className='listing-th'>Description</th>
+                <th className='listing-th'>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {categories.length === 0 ? (
+                <tr><td colSpan={5} className='listing-empty'>No categories found.</td></tr>
+              ) : (
+                categories.map((cat, idx) => (
+                  <tr key={cat.id} className='listing-tbody-tr'>
+                    <td className='listing-td'>{idx + 1}</td>
+                    <td className='listing-td'>{cat.name}</td>
+                    <td className='listing-td'>{cat.code}</td>
+                    <td className='listing-td'>{cat.description}</td>
+                    <td className='listing-td-actions'>
+                      <div className='flex gap-2'>
                         <Button variant='outline' size='sm' onClick={() => openEdit(cat)} disabled={!!actionLoading[cat.id]}>Edit</Button>
-                        <Button variant='destructive' size='sm' onClick={() => handleDelete(cat.id)} disabled={!!actionLoading[cat.id]}>
-                          {actionLoading[cat.id] ? '...' : 'Delete'}
-                        </Button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+                        <Button variant='destructive' size='sm' onClick={() => handleDelete(cat.id)} disabled={!!actionLoading[cat.id]}>{actionLoading[cat.id] ? '...' : 'Delete'}</Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   )
 }

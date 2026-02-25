@@ -56,59 +56,62 @@ export default function AddressesPage() {
   }
 
   return (
-    <div className="p-6 main-dashboard">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-semibold text-white">Master - Addresses</h1>
-        <div className="flex gap-2">
-          <Link href="/masters/addresses/new"><Button className="dashboard-add-btn">Add New Address</Button></Link>
-        </div>
+    <div className='listing-page'>
+      <div className='listing-header'>
+        <h1 className='listing-title'>Master – Addresses</h1>
+        <Link href='/masters/addresses/new'>
+          <Button className='dashboard-add-btn'>Add New Address</Button>
+        </Link>
       </div>
 
-      {error && <div className='mb-4 p-2 bg-red-100 text-red-700 rounded'>{error}</div>}
-      {message && <div className='mb-4 p-2 bg-green-100 text-green-800 rounded'>{message}</div>}
+      {error && <div className='listing-alert-error'>{error}</div>}
+      {message && <div className='listing-alert-success'>{message}</div>}
 
-      <div>
-        <h2 className='text-lg font-medium mb-2'>All Addresses</h2>
-        {loading ? <div>Loading...</div> : (
-          <div className='overflow-auto'>
-            <table className='w-full table-auto border dashboard-table'>
-              <thead>
-                <tr className='bg-gray-100'>
-                  <th className='p-2 text-left'>S.No</th>
-                  <th className='p-2 text-left'>Name</th>
-                  <th className='p-2 text-left'>Type</th>
-                  <th className='p-2 text-left'>Address</th>
-                  <th className='p-2 text-left'>City</th>
-                  <th className='p-2 text-left'>State</th>
-                  <th className='p-2 text-left'>Pincode</th>
-                  <th className='p-2 text-left'>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.length === 0 ? (
-                  <tr><td colSpan={8} className='p-4'>No addresses found.</td></tr>
-                ) : (
-                  items.map((it, idx) => (
-                    <tr key={it.id} className='border-t'>
-                      <td className='p-2'>{idx + 1}</td>
-                      <td className='p-2'>{it.name || ''}</td>
-                      <td className='p-2'>{it.type || ''}</td>
-                      <td className='p-2'>{it.addressLine1 ? `${it.addressLine1}${it.addressLine2 ? ', ' + it.addressLine2 : ''}` : ''}</td>
-                      <td className='p-2'>{it.city || ''}</td>
-                      <td className='p-2'>{it.state || ''}</td>
-                      <td className='p-2'>{it.pincode || ''}</td>
-                      <td className='p-2 flex gap-2 dashboard-actions'>
+      <p className='listing-subtitle'>All Addresses</p>
+
+      {loading ? (
+        <div className='listing-loading'>Loading...</div>
+      ) : (
+        <div className='listing-card overflow-x-auto'>
+          <table className='listing-table'>
+            <thead className='listing-thead'>
+              <tr>
+                <th className='listing-th'>S.No</th>
+                <th className='listing-th'>Name</th>
+                <th className='listing-th'>Type</th>
+                <th className='listing-th'>Address</th>
+                <th className='listing-th'>City</th>
+                <th className='listing-th'>State</th>
+                <th className='listing-th'>Pincode</th>
+                <th className='listing-th'>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.length === 0 ? (
+                <tr><td colSpan={8} className='listing-empty'>No addresses found.</td></tr>
+              ) : (
+                items.map((it, idx) => (
+                  <tr key={it.id} className='listing-tbody-tr'>
+                    <td className='listing-td'>{idx + 1}</td>
+                    <td className='listing-td'>{it.name || ''}</td>
+                    <td className='listing-td'>{it.type || ''}</td>
+                    <td className='listing-td'>{it.addressLine1 ? `${it.addressLine1}${it.addressLine2 ? ', ' + it.addressLine2 : ''}` : ''}</td>
+                    <td className='listing-td'>{it.city || ''}</td>
+                    <td className='listing-td'>{it.state || ''}</td>
+                    <td className='listing-td'>{it.pincode || ''}</td>
+                    <td className='listing-td-actions'>
+                      <div className='flex gap-2'>
                         <Button variant='outline' size='sm' onClick={() => openEdit(it)} disabled={!!actionLoading[it.id]}>Edit</Button>
                         <Button variant='destructive' size='sm' onClick={() => handleDelete(it.id)} disabled={!!actionLoading[it.id]}>{actionLoading[it.id] ? '...' : 'Delete'}</Button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   )
 }

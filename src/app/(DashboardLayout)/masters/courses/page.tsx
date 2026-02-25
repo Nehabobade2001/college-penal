@@ -1,22 +1,24 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
-import { streamAPI, programAPI } from '@/lib/api'
+import { courseAPI, programAPI } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-type Stream = {
+type Course = {
   id: number
   name: string
   code?: string
-  description?: string
-  program?: any
   programId?: number
+  program?: any
+  fees?: number
+  duration?: number
+  durationType?: string
 }
 
-export default function StreamsPage() {
-  const [streams, setStreams] = useState<Stream[]>([])
+export default function CoursesPage() {
+  const [courses, setCourses] = useState<Course[]>([])
   const [programs, setPrograms] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [actionLoading, setActionLoading] = useState<Record<number, boolean>>({})
@@ -24,15 +26,15 @@ export default function StreamsPage() {
   const [message, setMessage] = useState('')
   const router = useRouter()
 
-  const fetchStreams = async () => {
+  const fetchCourses = async () => {
     setLoading(true)
     try {
-      const res = await streamAPI.list()
-      if (res && res.data) setStreams(res.data)
-      else if (Array.isArray(res)) setStreams(res)
+      const res = await courseAPI.list()
+      if (res && res.data) setCourses(res.data)
+      else if (Array.isArray(res)) setCourses(res)
     } catch (e) {
       console.error(e)
-      setError('Failed to load streams')
+      setError('Failed to load courses')
     } finally {
       setLoading(false)
     }
@@ -40,31 +42,31 @@ export default function StreamsPage() {
 
   const fetchPrograms = async () => {
     try {
-      const res = await programAPI.list()
-      if (res && res.data) setPrograms(res.data)
-      else if (Array.isArray(res)) setPrograms(res)
+      const p = await programAPI.list()
+      if (p && p.data) setPrograms(p.data)
+      else if (Array.isArray(p)) setPrograms(p)
     } catch (e) { }
   }
 
   useEffect(() => {
-    fetchStreams()
+    fetchCourses()
     fetchPrograms()
   }, [])
 
-  const openEdit = (s: Stream) => {
-    router.push(`/masters/streams/new?id=${s.id}`)
+  const openEdit = (c: Course) => {
+    router.push(`/masters/courses/new?id=${c.id}`)
   }
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Delete this stream?')) return
+    if (!confirm('Delete this course?')) return
     setError('')
     setMessage('')
     setActionLoading((s) => ({ ...s, [id]: true }))
     try {
-      const res = await streamAPI.remove(id)
+      const res = await courseAPI.remove(id)
       if (res && (res.success || res.message === undefined)) {
-        setMessage('Stream deleted')
-        await fetchStreams()
+        setMessage('Course deleted')
+        await fetchCourses()
       } else if (res && res.message) {
         setError(res.message)
       }
@@ -79,16 +81,16 @@ export default function StreamsPage() {
   return (
     <div className='listing-page'>
       <div className='listing-header'>
-        <h1 className='listing-title'>Master – Streams</h1>
-        <Link href='/masters/streams/new'>
-          <Button className='dashboard-add-btn'>Add New Stream</Button>
+        <h1 className='listing-title'>Master – Courses</h1>
+        <Link href='/masters/courses/new'>
+          <Button className='dashboard-add-btn'>Add New Course</Button>
         </Link>
       </div>
 
       {error && <div className='listing-alert-error'>{error}</div>}
       {message && <div className='listing-alert-success'>{message}</div>}
 
-      <p className='listing-subtitle'>All Streams</p>
+      <p className='listing-subtitle'>All Courses</p>
 
       {loading ? (
         <div className='listing-loading'>Loading...</div>
@@ -101,25 +103,27 @@ export default function StreamsPage() {
                 <th className='listing-th'>Name</th>
                 <th className='listing-th'>Code</th>
                 <th className='listing-th'>Program</th>
-                <th className='listing-th'>Description</th>
+                <th className='listing-th'>Fees</th>
+                <th className='listing-th'>Duration</th>
                 <th className='listing-th'>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {streams.length === 0 ? (
-                <tr><td colSpan={6} className='listing-empty'>No streams found.</td></tr>
+              {courses.length === 0 ? (
+                <tr><td colSpan={7} className='listing-empty'>No courses found.</td></tr>
               ) : (
-                streams.map((s, idx) => (
-                  <tr key={s.id} className='listing-tbody-tr'>
+                courses.map((c, idx) => (
+                  <tr key={c.id} className='listing-tbody-tr'>
                     <td className='listing-td'>{idx + 1}</td>
-                    <td className='listing-td'>{s.name}</td>
-                    <td className='listing-td'>{s.code || ''}</td>
-                    <td className='listing-td'>{s.program?.name ?? (typeof s.program === 'object' ? (s.program?.name ?? JSON.stringify(s.program)) : s.program) ?? (programs.find(p => p.id === s.programId)?.name) ?? ''}</td>
-                    <td className='listing-td'>{s.description || ''}</td>
+                    <td className='listing-td'>{c.name}</td>
+                    <td className='listing-td'>{c.code || ''}</td>
+                    <td className='listing-td'>{c.program?.name ?? (programs.find(p => p.id === c.programId)?.name) ?? ''}</td>
+                    <td className='listing-td'>{c.fees != null ? c.fees : ''}</td>
+                    <td className='listing-td'>{c.duration ? `${c.duration} ${c.durationType ?? 'months'}` : ''}</td>
                     <td className='listing-td-actions'>
                       <div className='flex gap-2'>
-                        <Button variant='outline' size='sm' onClick={() => openEdit(s)} disabled={!!actionLoading[s.id]}>Edit</Button>
-                        <Button variant='destructive' size='sm' onClick={() => handleDelete(s.id)} disabled={!!actionLoading[s.id]}>{actionLoading[s.id] ? '...' : 'Delete'}</Button>
+                        <Button variant='outline' size='sm' onClick={() => openEdit(c)} disabled={!!actionLoading[c.id]}>Edit</Button>
+                        <Button variant='destructive' size='sm' onClick={() => handleDelete(c.id)} disabled={!!actionLoading[c.id]}>{actionLoading[c.id] ? '...' : 'Delete'}</Button>
                       </div>
                     </td>
                   </tr>

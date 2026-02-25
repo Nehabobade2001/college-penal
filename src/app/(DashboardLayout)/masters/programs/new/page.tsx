@@ -79,34 +79,34 @@ export default function NewProgramPage() {
     <div className="p-6 max-w-3xl">
       <div className="form-card">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-semibold text-white">{id ? 'Edit Program' : 'Add New Program'}</h1>
+          <h1 className="text-2xl font-semibold">{id ? 'Edit Program' : 'Add New Program'}</h1>
         </div>
 
         {error && <div className='mb-4 p-3 bg-red-100 text-red-700 rounded'>{error}</div>}
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
-            <label className='block mb-2 text-sm text-slate-300'>Name</label>
+            <label className='block mb-2 text-sm form-label'>Name</label>
             <input value={name} onChange={(e) => setName(e.target.value)} placeholder='Program name' className='form-input' required />
           </div>
 
           <div>
-            <label className='block mb-2 text-sm text-slate-300'>Code</label>
+            <label className='block mb-2 text-sm form-label'>Code</label>
             <input value={code} onChange={(e) => setCode(e.target.value)} placeholder='Short code' className='form-input' required />
           </div>
 
           <div>
-            <label className='block mb-2 text-sm text-slate-300'>Duration</label>
+            <label className='block mb-2 text-sm form-label'>Duration</label>
             <input type='number' value={duration} onChange={(e) => setDuration(e.target.value === '' ? '' : Number(e.target.value))} placeholder='e.g. 3' className='form-input' />
           </div>
 
           <div>
-            <label className='block mb-2 text-sm text-slate-300'>Duration Type</label>
+            <label className='block mb-2 text-sm form-label'>Duration Type</label>
             <input value={durationType} onChange={(e) => setDurationType(e.target.value)} placeholder='Years / Months' className='form-input' />
           </div>
 
           <div>
-            <label className='block mb-2 text-sm text-slate-300'>Department</label>
+            <label className='block mb-2 text-sm form-label'>Department</label>
             <select value={departmentId} onChange={(e) => setDepartmentId(e.target.value)} className='form-select' required>
               <option value=''>-- Select department --</option>
               {departments.map((d) => (
@@ -116,12 +116,12 @@ export default function NewProgramPage() {
           </div>
 
           <div className='md:col-span-2'>
-            <label className='block mb-2 text-sm text-slate-300'>Description</label>
+            <label className='block mb-2 text-sm form-label'>Description</label>
             <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder='Short description' className='form-textarea' rows={4} />
           </div>
 
           <div className='md:col-span-2'>
-            <label className='block mb-2 text-sm text-slate-300'>Status</label>
+            <label className='block mb-2 text-sm form-label'>Status</label>
             <select value={status} onChange={(e) => setStatus(e.target.value)} className='form-select'>
               <option value='active'>Active</option>
               <option value='inactive'>Inactive</option>

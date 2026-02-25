@@ -35,7 +35,7 @@ export default function StudentFormPage() {
 
   // Status
   const [status, setStatus] = useState('')
-  
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -149,7 +149,7 @@ export default function StudentFormPage() {
     <div className='p-6 main-dashboard'>
       <div className='form-card'>
         <div className='flex items-center justify-between mb-4'>
-          <h1 className='text-2xl font-semibold text-dark'>{id ? 'Edit Student' : 'Add Student'}</h1>
+          <h1 className='text-2xl font-semibold text-dark dark:text-white'>{id ? 'Edit Student' : 'Add Student'}</h1>
         </div>
 
         {error && <div className='mb-4 p-2 bg-red-100 text-red-700 rounded'>{error}</div>}
@@ -158,23 +158,23 @@ export default function StudentFormPage() {
         <form onSubmit={handleSubmit} className='max-w-4xl'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
             <div className='md:col-span-2'>
-              <h2 className='text-lg font-semibold text-dark mb-1'>Basic Information</h2>
-              <p className='text-sm text-slate-600 mb-4'>Personal details for the student.</p>
+              <h2 className='text-lg font-semibold text-dark dark:text-white mb-1'>Basic Information</h2>
+              <p className='text-sm text-gray-500 mb-4'>Personal details for the student.</p>
             </div>
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>First Name</label>
-              <input placeholder='First Name' className='form-input' value={firstName} onChange={(e)=>setFirstName(e.target.value)} required />
+              <label className='block mb-2 text-sm form-label'>First Name</label>
+              <input placeholder='First Name' className='form-input' value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
               {errors.firstName && <div className='text-sm text-red-400 mt-1'>{errors.firstName}</div>}
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Last Name</label>
-              <input placeholder='Last Name' className='form-input' value={lastName} onChange={(e)=>setLastName(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>Last Name</label>
+              <input placeholder='Last Name' className='form-input' value={lastName} onChange={(e) => setLastName(e.target.value)} />
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Gender</label>
-              <select className='form-select' value={gender} onChange={(e)=>setGender(e.target.value)}>
+              <label className='block mb-2 text-sm form-label'>Gender</label>
+              <select className='form-select' value={gender} onChange={(e) => setGender(e.target.value)}>
                 <option value='' disabled>Select</option>
                 <option value='Male'>Male</option>
                 <option value='Female'>Female</option>
@@ -183,86 +183,86 @@ export default function StudentFormPage() {
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Date of Birth</label>
-              <input type='date' className='form-input' value={dateOfBirth} onChange={(e)=>setDateOfBirth(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>Date of Birth</label>
+              <input type='date' className='form-input' value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Email</label>
-              <input placeholder='name@example.com' type='email' className='form-input' value={email} onChange={(e)=>setEmail(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>Email</label>
+              <input placeholder='name@example.com' type='email' className='form-input' value={email} onChange={(e) => setEmail(e.target.value)} />
               {errors.email && <div className='text-sm text-red-400 mt-1'>{errors.email}</div>}
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Mobile Number</label>
-              <input placeholder='9876543210' className='form-input' value={mobileNumber} onChange={(e)=>setMobileNumber(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>Mobile Number</label>
+              <input placeholder='9876543210' className='form-input' value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} />
             </div>
 
             <div className='md:col-span-2'>
-              <label className='block mb-2 text-sm text-slate-800'>Address</label>
-              <textarea placeholder='House, street, area' className='form-textarea' value={address} onChange={(e)=>setAddress(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>Address</label>
+              <textarea placeholder='House no., street, area' className='form-textarea' value={address} onChange={(e) => setAddress(e.target.value)} />
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>City</label>
-              <input placeholder='City' className='form-input' value={city} onChange={(e)=>setCity(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>City</label>
+              <input placeholder='City' className='form-input' value={city} onChange={(e) => setCity(e.target.value)} />
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>State</label>
-              <input placeholder='State' className='form-input' value={stateVal} onChange={(e)=>setStateVal(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>State</label>
+              <input placeholder='State' className='form-input' value={stateVal} onChange={(e) => setStateVal(e.target.value)} />
             </div>
 
             <div className='md:col-span-2'>
-              <h2 className='text-lg font-semibold text-dark mb-1'>Academic Information</h2>
-              <p className='text-sm text-slate-600 mb-4'>Enrollment, course and session details.</p>
+              <h2 className='text-lg font-semibold text-dark dark:text-white mb-1'>Academic Information</h2>
+              <p className='text-sm text-gray-500 mb-4'>Enrollment, course and session details.</p>
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Pincode</label>
-              <input placeholder='Pincode' className='form-input' value={pincode} onChange={(e)=>setPincode(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>Pincode</label>
+              <input placeholder='Pincode' className='form-input' value={pincode} onChange={(e) => setPincode(e.target.value)} />
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Enrollment Number</label>
-              <input placeholder='Enrollment number' className='form-input' value={enrollmentNumber} onChange={(e)=>setEnrollmentNumber(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>Enrollment Number</label>
+              <input placeholder='Enrollment number' className='form-input' value={enrollmentNumber} onChange={(e) => setEnrollmentNumber(e.target.value)} />
               {errors.enrollmentNumber && <div className='text-sm text-red-400 mt-1'>{errors.enrollmentNumber}</div>}
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Course Name</label>
-              <input placeholder='Course name (e.g. B.Sc Computer Science)' className='form-input' value={courseName} onChange={(e)=>setCourseName(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>Course Name</label>
+              <input placeholder='Course name (e.g. B.Sc Computer Science)' className='form-input' value={courseName} onChange={(e) => setCourseName(e.target.value)} />
               {errors.courseName && <div className='text-sm text-red-400 mt-1'>{errors.courseName}</div>}
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Branch</label>
-              <input placeholder='Branch / specialization' className='form-input' value={branch} onChange={(e)=>setBranch(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>Branch</label>
+              <input placeholder='Branch / specialization' className='form-input' value={branch} onChange={(e) => setBranch(e.target.value)} />
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Semester</label>
-              <input placeholder='Semester number' type='number' className='form-input' value={semester} onChange={(e)=>setSemester(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>Semester</label>
+              <input placeholder='Semester number' type='number' className='form-input' value={semester} onChange={(e) => setSemester(e.target.value)} />
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Admission Date</label>
-              <input placeholder='Admission date' type='date' className='form-input' value={admissionDate} onChange={(e)=>setAdmissionDate(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>Admission Date</label>
+              <input placeholder='Admission date' type='date' className='form-input' value={admissionDate} onChange={(e) => setAdmissionDate(e.target.value)} />
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Session Year</label>
-              <input placeholder='2025-2026' className='form-input' value={sessionYear} onChange={(e)=>setSessionYear(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>Session Year</label>
+              <input placeholder='2025-2026' className='form-input' value={sessionYear} onChange={(e) => setSessionYear(e.target.value)} />
             </div>
 
             <div className='md:col-span-2'>
-              <h2 className='text-lg font-semibold text-dark mb-1'>Documents</h2>
-              <p className='text-sm text-slate-600 mb-4'>Upload profile photo and previous marksheets. Files are stored and a preview link will appear.</p>
+              <h2 className='text-lg font-semibold text-dark dark:text-white mb-1'>Documents</h2>
+              <p className='text-sm text-gray-500 mb-4'>Upload profile photo and previous marksheets. Files are stored and a preview link will appear.</p>
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Profile Photo</label>
-              <input className='form-input' type='file' onChange={async (e)=>{
+              <label className='block mb-2 text-sm form-label'>Profile Photo</label>
+              <input className='form-input' type='file' onChange={async (e) => {
                 const file = e.target.files?.[0]
                 if (!file) return
                 const form = new FormData()
@@ -270,20 +270,20 @@ export default function StudentFormPage() {
                 try {
                   const uplRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002/api'}/files/upload`, { method: 'POST', body: form })
                   const data = await uplRes.json()
-                  if (data && data.files && data.files.length>0) setProfilePhotoUrl(data.files[0])
-                } catch(err){ console.error('Upload failed', err) }
+                  if (data && data.files && data.files.length > 0) setProfilePhotoUrl(data.files[0])
+                } catch (err) { console.error('Upload failed', err) }
               }} />
               {profilePhotoUrl && <a className='text-blue-400 underline text-sm' href={profilePhotoUrl} target='_blank' rel='noreferrer'>View</a>}
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Aadhaar Number</label>
-              <input className='form-input' value={aadhaarNumber} onChange={(e)=>setAadhaarNumber(e.target.value)} />
+              <label className='block mb-2 text-sm form-label'>Aadhaar Number</label>
+              <input className='form-input' placeholder='12-digit Aadhaar number' value={aadhaarNumber} onChange={(e) => setAadhaarNumber(e.target.value)} />
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Previous Marksheet</label>
-              <input className='form-input' type='file' onChange={async (e)=>{
+              <label className='block mb-2 text-sm form-label'>Previous Marksheet</label>
+              <input className='form-input' type='file' onChange={async (e) => {
                 const file = e.target.files?.[0]
                 if (!file) return
                 const form = new FormData()
@@ -291,15 +291,15 @@ export default function StudentFormPage() {
                 try {
                   const uplRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002/api'}/files/upload`, { method: 'POST', body: form })
                   const data = await uplRes.json()
-                  if (data && data.files && data.files.length>0) setPreviousMarksheetUrl(data.files[0])
-                } catch(err){ console.error('Upload failed', err) }
+                  if (data && data.files && data.files.length > 0) setPreviousMarksheetUrl(data.files[0])
+                } catch (err) { console.error('Upload failed', err) }
               }} />
               {previousMarksheetUrl && <a className='text-blue-400 underline text-sm' href={previousMarksheetUrl} target='_blank' rel='noreferrer'>View</a>}
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Category</label>
-              <select className='form-select' value={category} onChange={(e)=>setCategory(e.target.value)}>
+              <label className='block mb-2 text-sm form-label'>Category</label>
+              <select className='form-select' value={category} onChange={(e) => setCategory(e.target.value)}>
                 <option value='' disabled>Select category</option>
                 <option value='General'>General</option>
                 <option value='OBC'>OBC</option>
@@ -309,8 +309,8 @@ export default function StudentFormPage() {
             </div>
 
             <div>
-              <label className='block mb-2 text-sm text-slate-800'>Status</label>
-              <select className='form-select' value={status} onChange={(e)=>setStatus(e.target.value)}>
+              <label className='block mb-2 text-sm form-label'>Status</label>
+              <select className='form-select' value={status} onChange={(e) => setStatus(e.target.value)}>
                 <option value='' disabled>Select status</option>
                 <option>Active</option>
                 <option>Inactive</option>

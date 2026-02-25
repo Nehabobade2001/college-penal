@@ -40,9 +40,8 @@ const Header = () => {
   return (
     <>
       <header
-        className={`sticky top-0 xl:top-[70px] z-2 ${
-          isSticky ? 'bg-background shadow-md fixed w-full' : 'bg-transparent'
-        }`}>
+        className={`sticky top-0 xl:top-[4px] z-2 ${isSticky ? 'bg-background shadow-md fixed w-full' : 'bg-transparent'
+          }`}>
         <nav
           className={`rounded-none  py-4 sm:ps-6 max-w-full! sm:pe-10 dark:bg-dark flex justify-between items-center px-6`}>
           {/* Mobile Toggle Icon */}
@@ -88,32 +87,23 @@ const Header = () => {
 
           <div className='hidden xl:flex items-center justify-between w-full'>
             <div className='flex items-center gap-2'>
-              {/* Search Icon */}
-
+              {/* Search */}
               <div className='relative'>
                 <Icon
                   icon='solar:magnifer-linear'
                   width={18}
                   height={18}
-                  className='absolute left-3 top-1/2 -translate-y-1/2'
+                  className='absolute left-3 top-1/2 -translate-y-1/2 text-bodytext'
                 />
                 <Input
                   type='text'
                   placeholder='Search...'
-                  className='rounded-xl pl-10'
+                  className='rounded-xl pl-10 bg-muted border-defaultBorder focus:border-primary'
                 />
               </div>
             </div>
             <div className='flex w-full justify-end items-end'>
-              <div className='flex gap-0 items-center '>
-                <div className='relative lg:block hidden group w-fit shadow-grid-shadow bg-[radial-gradient(100%_707.08%_at_0%_0%,#15CEBD_0%,#548AFE_33.82%,#E02FD6_72.12%,#FDB54E_100%)] p-0.5 rounded-full'>
-                  <Link
-                    target='_blank'
-                    href={'https://adminmart.com/product/matdash-next-js-admin-dashboard-template/?ref=56'}
-                    className='flex items-center gap-2.5 px-3 py-1.5 bg-background rounded-full transition-all dark:hover:bg-[radial-gradient(100%_707.08%_at_0%_0%,#15CEBD36_0%,#548AFE36_33.82%,#E02FD636_72.12%,#FDB54E36_100%)] group hover:bg-[radial-gradient(100%_707.08%_at_0%_0%,#15CEBD36_0%,#548AFE36_33.82%,#E02FD636_72.12%,#FDB54E36_100%)]'>
-                    <p className='text-base font-semibold'>Check Pro Version</p>
-                  </Link>
-                </div>
+              <div className='flex gap-0 items-center'>
 
                 {/* ✅ Dark/Light Toggle */}
                 <div

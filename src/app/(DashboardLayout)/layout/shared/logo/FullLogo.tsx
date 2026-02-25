@@ -8,7 +8,7 @@ const FullLogo = () => {
     <Link href={"/"}>
       {/* Dark Logo */}
       <Image
-        src="/images/logos/dark-logo.svg"
+        src="/images/dashboard/logo.jpeg"
         alt="logo"
         width={135}
         height={40}
@@ -16,7 +16,7 @@ const FullLogo = () => {
       />
       {/* Light Logo */}
       <Image
-        src="/images/logos/dark-logo.svg"
+        src="/images/dashboard/logo.jpeg"
         alt="logo"
         width={135}
         height={40}

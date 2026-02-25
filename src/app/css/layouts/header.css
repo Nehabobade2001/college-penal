@@ -3,8 +3,19 @@
     overflow: hidden;
     transition: all .3s ease-in-out;
 }
+
 .mobile-header-menu.active {
     min-height: 70px;
     overflow: visible;
 }
 
+/* Light mode header — warm bottom border */
+:root:not(.dark) header nav {
+    border-bottom: 1px solid #E8DDD5;
+    background: #ffffff;
+}
+
+/* Sticky header warm shadow */
+header .shadow-md {
+    box-shadow: 0 2px 12px rgba(139, 26, 26, 0.09) !important;
+}

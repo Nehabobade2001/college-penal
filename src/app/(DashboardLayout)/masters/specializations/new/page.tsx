@@ -32,7 +32,7 @@ export default function NewSpecializationPage() {
         setProgramId((s.programId ?? s.program?.id ?? '') + '')
         setDepartmentId((s.departmentId ?? s.department?.id ?? '') + '')
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   const fetchDepsAndPrograms = async () => {
@@ -40,13 +40,13 @@ export default function NewSpecializationPage() {
       const p = await programAPI.list()
       if (p && p.data) setPrograms(p.data)
       else if (Array.isArray(p)) setPrograms(p)
-    } catch (e) {}
+    } catch (e) { }
 
     try {
       const d = await departmentAPI.list()
       if (d && d.data) setDepartments(d.data)
       else if (Array.isArray(d)) setDepartments(d)
-    } catch (e) {}
+    } catch (e) { }
   }
 
   useEffect(() => { if (id) fetchItem(id) }, [id])
@@ -72,24 +72,24 @@ export default function NewSpecializationPage() {
     <div className="p-6 max-w-3xl">
       <div className="form-card">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-semibold text-white">{id ? 'Edit Specialization' : 'Add New Specialization'}</h1>
+          <h1 className="text-2xl font-semibold">{id ? 'Edit Specialization' : 'Add New Specialization'}</h1>
         </div>
 
         {error && <div className='mb-4 p-3 bg-red-100 text-red-700 rounded'>{error}</div>}
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
-            <label className='block mb-2 text-sm text-slate-300'>Name</label>
+            <label className='block mb-2 text-sm form-label'>Name</label>
             <input value={name} onChange={(e) => setName(e.target.value)} placeholder='Specialization name' className='form-input' required />
           </div>
 
           <div>
-            <label className='block mb-2 text-sm text-slate-300'>Code</label>
+            <label className='block mb-2 text-sm form-label'>Code</label>
             <input value={code} onChange={(e) => setCode(e.target.value)} placeholder='Short code' className='form-input' />
           </div>
 
           <div>
-            <label className='block mb-2 text-sm text-slate-300'>Program</label>
+            <label className='block mb-2 text-sm form-label'>Program</label>
             <select value={programId} onChange={(e) => setProgramId(e.target.value)} className='form-select' required>
               <option value=''>-- Select program --</option>
               {programs.map((p) => (
@@ -99,7 +99,7 @@ export default function NewSpecializationPage() {
           </div>
 
           <div>
-            <label className='block mb-2 text-sm text-slate-300'>Department (optional)</label>
+            <label className='block mb-2 text-sm form-label'>Department (optional)</label>
             <select value={departmentId} onChange={(e) => setDepartmentId(e.target.value)} className='form-select'>
               <option value=''>-- Select department --</option>
               {departments.map((d) => (
@@ -109,7 +109,7 @@ export default function NewSpecializationPage() {
           </div>
 
           <div className='md:col-span-2'>
-            <label className='block mb-2 text-sm text-slate-300'>Description</label>
+            <label className='block mb-2 text-sm form-label'>Description</label>
             <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder='Short description' className='form-textarea' rows={4} />
           </div>
 

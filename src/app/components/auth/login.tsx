@@ -51,6 +51,98 @@ export const Login = () => {
         const expires = new Date(Date.now() + 86400000).toUTCString()
         document.cookie = `accessToken=${res.data.accessToken}; path=/; expires=${expires}`
         document.cookie = `userRole=${role}; path=/; expires=${expires}`
+
+        // ── Build permission cache (two sources) ──────────────────────────────
+        // SOURCE 1 (instant): verifyOTP response has user.permissions as a flat
+        //   array of SLUG STRINGS  e.g. ["MasterApp-Center-Read", ...]
+        //   auth.service.ts: allPermissions = roles.flatMap(r => r.permissions.map(p => p.slug))
+        // SOURCE 2 (profile): /auth/profile now returns full user with
+        //   roles[].permissions[] objects (since jwt.strategy.ts was fixed).
+        //   This gives us .route, .httpMethod, .module fields.
+        try {
+          const apiRoutes: string[] = []
+
+          // SOURCE 1 — permissions from verifyOTP response.
+          // auth.service.ts now returns OBJECTS: { id, slug, route, httpMethod, module, action }
+          // (older backend may still return plain strings — handle both shapes)
+          const slugPerms: any[] = res.data?.user?.permissions || []
+          slugPerms.forEach((p: any) => {
+            if (!p) return
+            if (typeof p === 'string') {
+              // Old backend format: plain slug string
+              if (!apiRoutes.includes(p)) apiRoutes.push(p)
+            } else if (typeof p === 'object') {
+              // New backend format: full permission object
+              if (p.slug && !apiRoutes.includes(p.slug)) apiRoutes.push(p.slug)
+              if (p.route && !apiRoutes.includes(p.route)) apiRoutes.push(p.route)
+              if (p.httpMethod && p.route) {
+                const tok = `${String(p.httpMethod).toLowerCase()} ${p.route}`
+                if (!apiRoutes.includes(tok)) apiRoutes.push(tok)
+              }
+              if (p.module) {
+                const mod = String(p.module).trim().toLowerCase()
+                const path = `/${mod.endsWith('s') ? mod : mod + 's'}`
+                if (!apiRoutes.includes(path)) apiRoutes.push(path)
+                if (!apiRoutes.includes(`get ${path}`)) apiRoutes.push(`get ${path}`)
+              }
+            }
+          })
+          console.log('[Login] perms from verifyOTP:', slugPerms.length, '| apiRoutes so far:', apiRoutes)
+
+          // SOURCE 2 — /auth/profile gives richer data; roles/roleNames fallback from verifyOTP response
+          const loginRoles: any[] = res.data?.user?.roles || []
+          let roleNames: string[] = loginRoles.map((r: any) => r.name).filter(Boolean)
+
+          try {
+            const profileRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
+              headers: { Authorization: `Bearer ${res.data.accessToken}` },
+            })
+            const profileData = await profileRes.json()
+            const roles: any[] = profileData?.data?.roles || []
+            // Override with profile role names if we got some
+            if (roles.length > 0) roleNames = roles.map((r: any) => r.name)
+
+            roles.forEach((r: any) => {
+              (r.permissions || []).forEach((p: any) => {
+                // p may be an object with route/slug/module, or just a string
+                if (typeof p === 'string') {
+                  if (!apiRoutes.includes(p)) apiRoutes.push(p)
+                } else if (p && typeof p === 'object') {
+                  if (p.route && !apiRoutes.includes(p.route)) apiRoutes.push(p.route)
+                  if (p.slug && !apiRoutes.includes(p.slug)) apiRoutes.push(p.slug)
+                  if (p.httpMethod && p.route) {
+                    const tok = `${String(p.httpMethod).toLowerCase()} ${p.route}`
+                    if (!apiRoutes.includes(tok)) apiRoutes.push(tok)
+                  }
+                  if (p.module) {
+                    const mod = String(p.module).trim().toLowerCase()
+                    const path = `/${mod.endsWith('s') ? mod : mod + 's'}`
+                    if (!apiRoutes.includes(path)) { apiRoutes.push(path); apiRoutes.push(`get ${path}`) }
+                  }
+                }
+              })
+            })
+            console.log('[Login] profile roles:', JSON.stringify(roles.map(r => ({ name: r.name, permCount: (r.permissions || []).length }))))
+          } catch (profileErr) {
+            // Profile fetch failed — slugs from verifyOTP still usable, role names from login response
+            console.warn('[Login] profile fetch failed, using login response data:', profileErr)
+          }
+
+          console.log('[Login] final apiRoutes:', apiRoutes, '| roleNames:', roleNames)
+
+          localStorage.setItem('userPermissions', JSON.stringify(apiRoutes))
+          localStorage.setItem('userPermissions_ts', String(Date.now()))
+          localStorage.setItem('userRoleNames', JSON.stringify(roleNames))
+          localStorage.setItem('isAdmin', JSON.stringify(
+            roleNames.some(n => n === 'Admin' || n === 'Organization Admin')
+          ))
+        } catch (e) {
+          console.error('[Login] permission build failed:', e)
+          localStorage.removeItem('userPermissions')
+          localStorage.removeItem('userRoleNames')
+          localStorage.setItem('isAdmin', 'false')
+        }
+
         window.location.href = '/'
       } else {
         setError(res.message || 'Invalid OTP')
@@ -71,9 +163,9 @@ export const Login = () => {
           <p className='text-sm text-charcoal text-center mb-6'>
             Your Social Campaigns
           </p>
-          
+
           {error && <div className='mb-4 p-3 bg-red-100 text-red-700 rounded'>{error}</div>}
-          
+
           <form onSubmit={showOTP ? handleVerifyOTP : handleRequestOTP}>
             {!showOTP ? (
               <>
@@ -161,7 +253,7 @@ export const Login = () => {
               </>
             )}
           </form>
-          
+
           <div className='flex items center gap-2 justify-center mt-6 flex-wrap'>
             <p className='text-base font-medium text-link dark:text-darklink'>
               New to Matdash?

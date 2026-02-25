@@ -72,28 +72,29 @@ export default function NewDepartmentPage() {
     <div className="p-6 max-w-3xl">
       <div className="form-card">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-semibold text-white">{id ? 'Edit Department' : 'Add New Department'}</h1>
+          <h1 className="text-2xl font-semibold">{id ? 'Edit Department' : 'Add New Department'}</h1>
         </div>
 
         {error && <div className='mb-4 p-3 bg-red-100 text-red-700 rounded'>{error}</div>}
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
-            <label className='block mb-2 text-sm text-slate-300'>Name</label>
+            <label className='block mb-2 text-sm form-label'>Name</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
+              placeholder='e.g. Computer Science, Commerce'
               className="form-input"
             />
           </div>
 
           <div>
-            <label className='block mb-2 text-sm text-slate-300'>Code</label>
-            <input value={code} onChange={(e) => setCode(e.target.value)} placeholder='Short code (optional)' className='w-full p-3 rounded bg-slate-800 text-white border border-slate-700 placeholder-slate-400' />
+            <label className='block mb-2 text-sm form-label'>Code</label>
+            <input value={code} onChange={(e) => setCode(e.target.value)} placeholder='Short code (optional)' className='form-input' />
           </div>
 
           <div>
-            <label className='block mb-2 text-sm text-slate-300'>Category</label>
+            <label className='block mb-2 text-sm form-label'>Category</label>
             <select
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
@@ -107,10 +108,11 @@ export default function NewDepartmentPage() {
           </div>
 
           <div className='md:col-span-2'>
-            <label className='block mb-2 text-sm text-slate-300'>Description</label>
+            <label className='block mb-2 text-sm form-label'>Description</label>
             <input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              placeholder='Brief description of the department'
               className="form-input"
             />
           </div>

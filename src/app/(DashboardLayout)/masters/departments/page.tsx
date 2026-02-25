@@ -11,6 +11,9 @@ type Department = {
   name: string
   code?: string
   description?: string
+  categoryName?: string
+  category?: any
+  categoryId?: number
 }
 
 export default function DepartmentsPage() {
@@ -41,9 +44,7 @@ export default function DepartmentsPage() {
       const res = await categoryAPI.list()
       if (res && res.data) setCategories(res.data)
       else if (Array.isArray(res)) setCategories(res)
-    } catch (e) {
-      // ignore
-    }
+    } catch (e) { }
   }
 
   useEffect(() => {
@@ -77,63 +78,60 @@ export default function DepartmentsPage() {
   }
 
   return (
-    <div className="p-6 main-dashboard">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-semibold text-white">Master - Departments</h1>
-        <div className="flex gap-2">
-          <Link href="/masters/departments/new">
-            <Button className="dashboard-add-btn">Add New Department</Button>
-          </Link>
+    <div className='listing-page'>
+      <div className='listing-header'>
+        <h1 className='listing-title'>Master – Departments</h1>
+        <Link href='/masters/departments/new'>
+          <Button className='dashboard-add-btn'>Add New Department</Button>
+        </Link>
+      </div>
+
+      {error && <div className='listing-alert-error'>{error}</div>}
+      {message && <div className='listing-alert-success'>{message}</div>}
+
+      <p className='listing-subtitle'>All Departments</p>
+
+      {loading ? (
+        <div className='listing-loading'>Loading...</div>
+      ) : (
+        <div className='listing-card overflow-x-auto'>
+          <table className='listing-table'>
+            <thead className='listing-thead'>
+              <tr>
+                <th className='listing-th'>S.No</th>
+                <th className='listing-th'>Name</th>
+                <th className='listing-th'>Code</th>
+                <th className='listing-th'>Description</th>
+                <th className='listing-th'>Category</th>
+                <th className='listing-th'>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {departments.length === 0 ? (
+                <tr><td colSpan={6} className='listing-empty'>No departments found.</td></tr>
+              ) : (
+                departments.map((dep, idx) => (
+                  <tr key={dep.id} className='listing-tbody-tr'>
+                    <td className='listing-td'>{idx + 1}</td>
+                    <td className='listing-td'>{dep.name}</td>
+                    <td className='listing-td'>{dep.code || ''}</td>
+                    <td className='listing-td'>{dep.description || ''}</td>
+                    <td className='listing-td'>
+                      {dep.categoryName ?? (typeof dep.category === 'object' ? (dep.category?.name ?? dep.category?.code ?? JSON.stringify(dep.category)) : dep.category) ?? (categories.find(c => c.id === dep.categoryId)?.name) ?? ''}
+                    </td>
+                    <td className='listing-td-actions'>
+                      <div className='flex gap-2'>
+                        <Button variant='outline' size='sm' onClick={() => openEdit(dep)} disabled={!!actionLoading[dep.id]}>Edit</Button>
+                        <Button variant='destructive' size='sm' onClick={() => handleDelete(dep.id)} disabled={!!actionLoading[dep.id]}>{actionLoading[dep.id] ? '...' : 'Delete'}</Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
-      </div>
-
-      {error && <div className='mb-4 p-2 bg-red-100 text-red-700 rounded'>{error}</div>}
-      {message && <div className='mb-4 p-2 bg-green-100 text-green-800 rounded'>{message}</div>}
-
-      <div>
-        <h2 className='text-lg font-medium mb-2'>All Departments</h2>
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <div className='overflow-auto'>
-            <table className='w-full table-auto border dashboard-table'>
-              <thead>
-                <tr className='bg-gray-100'>
-                  <th className='p-2 text-left'>S.No</th>
-                  <th className='p-2 text-left'>Name</th>
-                  <th className='p-2 text-left'>Code</th>
-                  <th className='p-2 text-left'>Description</th>
-                  <th className='p-2 text-left'>Category</th>
-                  <th className='p-2 text-left'>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {departments.length === 0 ? (
-                  <tr><td colSpan={5} className='p-4'>No departments found.</td></tr>
-                ) : (
-                  departments.map((dep, idx) => (
-                    <tr key={dep.id} className='border-t'>
-                      <td className='p-2'>{idx + 1}</td>
-                      <td className='p-2'>{dep.name}</td>
-                      <td className='p-2'>{dep.code || ''}</td>
-                      <td className='p-2'>{dep.description || ''}</td>
-                      <td className='p-2'>
-                        {dep.categoryName ?? (typeof dep.category === 'object' ? (dep.category?.name ?? dep.category?.code ?? JSON.stringify(dep.category)) : dep.category) ?? (categories.find(c => c.id === dep.categoryId)?.name) ?? ''}
-                      </td>
-                      <td className='p-2 flex gap-2 dashboard-actions'>
-                          <Button variant='outline' size='sm' onClick={() => openEdit(dep)} disabled={!!actionLoading[dep.id]}>Edit</Button>
-                          <Button variant='destructive' size='sm' onClick={() => handleDelete(dep.id)} disabled={!!actionLoading[dep.id]}>
-                            {actionLoading[dep.id] ? '...' : 'Delete'}
-                          </Button>
-                        </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   )
 }

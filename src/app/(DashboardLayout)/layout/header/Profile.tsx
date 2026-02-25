@@ -10,8 +10,36 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
+import { authAPI } from '@/lib/api'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 const Profile = () => {
+  const router = useRouter()
+  const [loggingOut, setLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    try {
+      setLoggingOut(true)
+      await authAPI.logout()
+    } catch (e) {
+      // ignore errors — proceed to clear client state
+      console.error(e)
+    } finally {
+      // Clear auth cookie and client-side state
+      try {
+        document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+        document.cookie = 'userRole=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      } catch {}
+      localStorage.removeItem('userPermissions')
+      localStorage.removeItem('userRoleNames')
+      localStorage.removeItem('isAdmin')
+      // Redirect to login
+      router.push('/auth/login')
+      setLoggingOut(false)
+    }
+  }
+
   return (
     <div className="relative group/menu">
       <DropdownMenu>
@@ -63,12 +91,13 @@ const Profile = () => {
 
           <div className="p-3 pt-0">
             <Button
-              asChild
+              onClick={handleLogout}
               variant="outline"
               size="sm"
               className="mt-2 w-full"
+              disabled={loggingOut}
             >
-              <Link href="/auth/login">Logout</Link>
+              {loggingOut ? 'Logging out...' : 'Logout'}
             </Button>
           </div>
         </DropdownMenuContent>

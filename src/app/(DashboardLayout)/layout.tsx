@@ -1,7 +1,6 @@
 'use client'
 
 import Header from './layout/header/Header'
-import Topbar from './layout/header/Topbar'
 import Sidebar from './layout/sidebar/Sidebar'
 
 export default function Layout({
@@ -11,7 +10,7 @@ export default function Layout({
 }>) {
   return (
     <>
-      <Topbar />
+      
       <div className='flex w-full min-h-screen'>
         <div className='page-wrapper flex w-full'>
           {/* Header/sidebar */}
