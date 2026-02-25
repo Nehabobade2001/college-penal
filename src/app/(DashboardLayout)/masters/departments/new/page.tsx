@@ -20,13 +20,17 @@ export default function NewDepartmentPage() {
 
   const fetchDepartment = async (idVal: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002/api'}/departments/${idVal}`)
-      const data = await res.json()
-      if (data) {
-        setName(data.name || '')
-        setCode(data.code || '')
-        setDescription(data.description || '')
-        setCategoryId((data.categoryId ?? data.category?.id ?? data.category ?? '') + '')
+      // Use departmentAPI.list() to ensure requests reuse the same auth headers/shape
+      const listRes: any = await departmentAPI.list()
+      const items = listRes && listRes.data ? listRes.data : listRes
+      if (Array.isArray(items)) {
+        const found = items.find((it: any) => String(it.id) === String(idVal))
+        if (found) {
+          setName(found.name || '')
+          setCode(found.code || '')
+          setDescription(found.description || '')
+          setCategoryId((found.categoryId ?? found.category?.id ?? found.category ?? '') + '')
+        }
       }
     } catch (e) {
       // ignore
