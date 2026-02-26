@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { useTheme } from 'next-themes'
 import { Icon } from '@iconify/react'
 import Profile from './Profile'
-import Link from 'next/link'
 import Notifications from './Notifications'
 import SidebarLayout from '../sidebar/Sidebar'
 import FullLogo from '../shared/logo/FullLogo'
@@ -13,43 +12,33 @@ import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 const Header = () => {
-  const { theme, setTheme } = useTheme()
+  const { setTheme } = useTheme()
   const [isSticky, setIsSticky] = useState(false)
-  const [mobileMenu, setMobileMenu] = useState('')
   const [isOpen, setIsOpen] = useState(false)
+
+  // Force light theme permanently
+  useEffect(() => {
+    setTheme('light')
+  }, [setTheme])
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsSticky(true)
-      } else {
-        setIsSticky(false)
-      }
+      setIsSticky(window.scrollY > 50)
     }
-
     window.addEventListener('scroll', handleScroll)
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-
-  const toggleMode = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'))
-  }
 
   return (
     <>
       <header
-        className={`sticky top-0 xl:top-[4px] z-2 ${isSticky ? 'bg-background shadow-md fixed w-full' : 'bg-transparent'
-          }`}>
-        <nav
-          className={`rounded-none  py-4 sm:ps-6 max-w-full! sm:pe-10 dark:bg-dark flex justify-between items-center px-6`}>
-          {/* Mobile Toggle Icon */}
+        className={`sticky top-0 xl:top-[4px] z-2 ${isSticky ? 'bg-background shadow-md fixed w-full' : 'bg-transparent'}`}>
+        <nav className={`rounded-none py-4 sm:ps-6 max-w-full! sm:pe-10 flex justify-between items-center px-6`}>
+
+          {/* Mobile menu toggle */}
           <div
-            onClick={() => {
-              setIsOpen(true)
-            }}
-            className='px-3.5 hover:text-primary dark:hover:text-primary text-link dark:text-darklink relative after:absolute after:w-10 after:h-10 after:rounded-full hover:after:bg-lightprimary  after:bg-transparent rounded-full xl:hidden flex justify-center items-center cursor-pointer'>
+            onClick={() => setIsOpen(true)}
+            className='px-3.5 hover:text-primary text-link relative after:absolute after:w-10 after:h-10 after:rounded-full hover:after:bg-lightprimary after:bg-transparent rounded-full xl:hidden flex justify-center items-center cursor-pointer'>
             <Icon icon='tabler:menu-2' height={20} width={20} />
           </div>
 
@@ -57,37 +46,16 @@ const Header = () => {
             <FullLogo />
           </div>
 
-          <div className='flex xl:hidden items-center'>
-            <div
-              className='hover:text-primary px-2 md:px-15 group focus:ring-0 rounded-full flex justify-center items-center cursor-pointer text-gray relative'
-              onClick={toggleMode}>
-              <span className='flex items-center justify-center relative after:absolute after:w-10 after:h-10 after:rounded-full after:-top-1/2   group-hover:after:bg-lightprimary'>
-                {theme === 'light' ? (
-                  <Icon icon='tabler:moon' width='20' />
-                ) : (
-                  <Icon
-                    icon='solar:sun-bold-duotone'
-                    width='20'
-                    className='group-hover:text-primary'
-                  />
-                )}
-              </span>
-            </div>
-
-            <div className='xl:block '>
-              <div className='flex gap-0 items-center relative'>
-                {/* Chat */}
-                <Notifications />
-              </div>
-            </div>
-
-            {/* Profile Dropdown */}
+          {/* Mobile right side */}
+          <div className='flex xl:hidden items-center gap-1'>
+            <Notifications />
             <Profile />
           </div>
 
+          {/* Desktop nav */}
           <div className='hidden xl:flex items-center justify-between w-full'>
+            {/* Search */}
             <div className='flex items-center gap-2'>
-              {/* Search */}
               <div className='relative'>
                 <Icon
                   icon='solar:magnifer-linear'
@@ -102,36 +70,11 @@ const Header = () => {
                 />
               </div>
             </div>
-            <div className='flex w-full justify-end items-end'>
-              <div className='flex gap-0 items-center'>
 
-                {/* ✅ Dark/Light Toggle */}
-                <div
-                  className='hover:text-primary px-15 group focus:ring-0 rounded-full flex justify-center items-center cursor-pointer text-gray relative'
-                  onClick={toggleMode}>
-                  <span className='flex items-center justify-center relative after:absolute after:w-10 after:h-10 after:rounded-full after:-top-1/2   group-hover:after:bg-lightprimary'>
-                    {theme === 'light' ? (
-                      <Icon icon='tabler:moon' width='20' />
-                    ) : (
-                      <Icon
-                        icon='solar:sun-bold-duotone'
-                        width='20'
-                        className='group-hover:text-primary'
-                      />
-                    )}
-                  </span>
-                </div>
-
-                <div className='xl:block '>
-                  <div className='flex gap-0 items-center relative'>
-                    {/* Chat */}
-                    <Notifications />
-                  </div>
-                </div>
-
-                {/* Profile Dropdown */}
-                <Profile />
-              </div>
+            {/* Right icons */}
+            <div className='flex items-center gap-1'>
+              <Notifications />
+              <Profile />
             </div>
           </div>
         </nav>
