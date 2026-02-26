@@ -18,8 +18,7 @@ const BCrumb = [
 const Notes = () => {
 
   return (
-    <>
-     
+    <>    
         <BreadcrumbComp title="Notes app" items={BCrumb} />
         <NotesApp/>
     </>

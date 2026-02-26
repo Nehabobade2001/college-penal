@@ -9,7 +9,6 @@ export default function NewAddressPage() {
   const router = useRouter()
   const params = useSearchParams()
   const id = params?.get('id')
-
   const [name, setName] = useState('')
   const [type, setType] = useState('')
   const [addressLine1, setAddressLine1] = useState('')

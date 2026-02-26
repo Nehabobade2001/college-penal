@@ -18,6 +18,10 @@ export default function StudentFormPage() {
   const [city, setCity] = useState('')
   const [stateVal, setStateVal] = useState('')
   const [pincode, setPincode] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [centerId, setCenterId] = useState('')
+  const [centers, setCenters] = useState<any[]>([])
 
   // Academic Information
   const [enrollmentNumber, setEnrollmentNumber] = useState('')
@@ -60,6 +64,7 @@ export default function StudentFormPage() {
         setCity(data.city || '')
         setStateVal(data.state || '')
         setPincode(data.pincode || '')
+        setCenterId(data.centerId ? String(data.centerId) : '')
 
         setEnrollmentNumber(data.enrollmentNumber || '')
         setCourseName(data.courseName || '')
@@ -80,7 +85,35 @@ export default function StudentFormPage() {
     }
   }
 
+  const fetchCenters = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002/api'}/centers`)
+      if (!res.ok) {
+        console.error('Centers API error:', res.status)
+        return
+      }
+      const data = await res.json()
+      console.log('Centers API response:', data)
+      
+      // Handle different response formats
+      if (Array.isArray(data)) {
+        setCenters(data)
+      } else if (data.data && Array.isArray(data.data)) {
+        setCenters(data.data)
+      } else if (data.centers && Array.isArray(data.centers)) {
+        setCenters(data.centers)
+      } else {
+        console.error('Unexpected centers data format:', data)
+        setCenters([])
+      }
+    } catch (e) {
+      console.error('Failed to fetch centers:', e)
+      setCenters([])
+    }
+  }
+
   useEffect(() => {
+    fetchCenters()
     if (id) fetchStudent(id)
   }, [id])
 
@@ -90,6 +123,15 @@ export default function StudentFormPage() {
     if (email && !/^\S+@\S+\.\S+$/.test(email)) e.email = 'Enter a valid email'
     if (!enrollmentNumber || enrollmentNumber.trim().length === 0) e.enrollmentNumber = 'Enrollment number is required'
     if (!courseName || courseName.trim().length === 0) e.courseName = 'Course name is required'
+    
+    if (!id) {
+      if (!password || password.length < 6) e.password = 'Password must be at least 6 characters'
+      if (password !== confirmPassword) e.confirmPassword = 'Passwords do not match'
+    } else if (password || confirmPassword) {
+      if (password.length < 6) e.password = 'Password must be at least 6 characters'
+      if (password !== confirmPassword) e.confirmPassword = 'Passwords do not match'
+    }
+    
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -115,6 +157,7 @@ export default function StudentFormPage() {
         city,
         state: stateVal,
         pincode,
+        centerId: centerId ? Number(centerId) : undefined,
 
         enrollmentNumber,
         courseName,
@@ -129,6 +172,11 @@ export default function StudentFormPage() {
         category,
 
         status,
+      }
+      
+      if (!id || password) {
+        payload.password = password
+        payload.confirmPassword = confirmPassword
       }
       let res
       if (id) {
@@ -198,6 +246,18 @@ export default function StudentFormPage() {
               <input placeholder='9876543210' className='form-input' value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} />
             </div>
 
+            <div>
+              <label className='block mb-2 text-sm form-label'>Password {id && '(Leave blank to keep current)'}</label>
+              <input placeholder='Enter password' type='password' className='form-input' value={password} onChange={(e) => setPassword(e.target.value)} required={!id} />
+              {errors.password && <div className='text-sm text-red-400 mt-1'>{errors.password}</div>}
+            </div>
+
+            <div>
+              <label className='block mb-2 text-sm form-label'>Confirm Password</label>
+              <input placeholder='Re-enter password' type='password' className='form-input' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required={!id} />
+              {errors.confirmPassword && <div className='text-sm text-red-400 mt-1'>{errors.confirmPassword}</div>}
+            </div>
+
             <div className='md:col-span-2'>
               <label className='block mb-2 text-sm form-label'>Address</label>
               <textarea placeholder='House no., street, area' className='form-textarea' value={address} onChange={(e) => setAddress(e.target.value)} />
@@ -213,14 +273,31 @@ export default function StudentFormPage() {
               <input placeholder='State' className='form-input' value={stateVal} onChange={(e) => setStateVal(e.target.value)} />
             </div>
 
-            <div className='md:col-span-2'>
-              <h2 className='text-lg font-semibold text-dark dark:text-white mb-1'>Academic Information</h2>
-              <p className='text-sm text-gray-500 mb-4'>Enrollment, course and session details.</p>
-            </div>
-
             <div>
               <label className='block mb-2 text-sm form-label'>Pincode</label>
               <input placeholder='Pincode' className='form-input' value={pincode} onChange={(e) => setPincode(e.target.value)} />
+            </div>
+
+            <div>
+              <label className='block mb-2 text-sm form-label'>Center {centers.length > 0 && `(${centers.length} available)`}</label>
+              <select className='form-select' value={centerId} onChange={(e) => setCenterId(e.target.value)} style={{color: '#000'}}>
+                <option value='' style={{color: '#000', backgroundColor: '#fff'}}>Select Center</option>
+                {centers.length > 0 ? (
+                  centers.map((center) => (
+                    <option key={center.id} value={center.id} style={{color: '#000', backgroundColor: '#fff'}}>
+                      {center.franchiseName || center.name || center.centerName || `Center ${center.id}`}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled style={{color: '#666', backgroundColor: '#fff'}}>No centers available</option>
+                )}
+              </select>
+              {centers.length === 0 && <div className='text-sm text-yellow-600 mt-1'>Check console for API response</div>}
+            </div>
+
+            <div className='md:col-span-2'>
+              <h2 className='text-lg font-semibold text-dark dark:text-white mb-1'>Academic Information</h2>
+              <p className='text-sm text-gray-500 mb-4'>Enrollment, course and session details.</p>
             </div>
 
             <div>
