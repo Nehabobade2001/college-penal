@@ -1,17 +1,7 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002/api';
 
-/**
- * Clears the frontend permission cache stored in localStorage.
- * Call this on logout or whenever an admin updates a role's permissions,
- * so the next page interaction re-fetches fresh permissions from the backend.
- */
-export const clearPermissionCache = () => {
-  if (typeof localStorage === 'undefined') return
-  localStorage.removeItem('userPermissions')
-  localStorage.removeItem('userPermissions_ts')
-  localStorage.removeItem('userRoleNames')
-  localStorage.removeItem('isAdmin')
-}
+// Permissions are now fetched fresh from /auth/profile on every page load.
+// No localStorage permission cache to clear.
 
 export const authAPI = {
   requestOTP: async (role: 'admin' | 'franchise' | 'student', email: string, password: string) => {
@@ -45,8 +35,6 @@ export const authAPI = {
       method: 'POST',
       headers: authToken ? { Authorization: `Bearer ${authToken}` } : undefined,
     })
-    // Clear permission cache so the user starts fresh on next login
-    clearPermissionCache()
     return res.json()
   }
 };
@@ -163,7 +151,7 @@ export const categoryAPI = {
     })
     return res.json()
   },
-  
+
   get: async (id: number, token?: string) => {
     const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
     const res = await fetch(`${API_URL}/categories/${id}`, {
@@ -761,9 +749,7 @@ export const roleAPI = {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
       body: JSON.stringify(payload),
     })
-    // Invalidate the frontend permission cache so users whose roles just changed
-    // will see fresh permissions within the next 2-minute window.
-    clearPermissionCache()
+    // Permissions re-fetched from API on next page load — no cache to invalidate.
     return res.json()
   },
   remove: async (id: number) => {

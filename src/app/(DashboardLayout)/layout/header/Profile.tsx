@@ -30,10 +30,7 @@ const Profile = () => {
       try {
         document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
         document.cookie = 'userRole=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
-      } catch {}
-      localStorage.removeItem('userPermissions')
-      localStorage.removeItem('userRoleNames')
-      localStorage.removeItem('isAdmin')
+      } catch { }
       // Redirect to login
       router.push('/auth/login')
       setLoggingOut(false)

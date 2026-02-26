@@ -63,8 +63,8 @@ const SidebarContent: MenuItem[] = [
   {
     heading: 'Statistics',
     children: [
-      { id: uniqueId(), name: 'Total Centers', icon: 'solar:chart-line-duotone', url: '/apps/centers', disabled: false, apiRoute: ['GET /centers','/centers','MasterApp:CenterModule:Center-List'] },
-      { id: uniqueId(), name: 'Total Students', icon: 'solar:chart-line-duotone', url: '/apps/students', disabled: false, apiRoute: 'GET /students' },
+      { id: uniqueId(), name: 'Total Centers', icon: 'solar:chart-line-duotone', url: '/apps/centers', disabled: false, apiRoute: ['GET /centers','/centers','MasterApp:CenterModule:Center-List','MasterApp:Center-Module:Center-List'] },
+      { id: uniqueId(), name: 'Total Students', icon: 'solar:chart-line-duotone', url: '/apps/students', disabled: false, apiRoute: ['GET /students','/students','MasterApp:Student:Listing','MasterApp:Student-Module:Student-List'] },
       { id: uniqueId(), name: 'Active Courses', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
       { id: uniqueId(), name: 'Monthly Admissions', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
       { id: uniqueId(), name: 'Total Revenue (All Centers)', icon: 'solar:chart-line-duotone', url: '#', disabled: true },

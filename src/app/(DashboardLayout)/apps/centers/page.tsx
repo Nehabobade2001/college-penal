@@ -1,10 +1,27 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { centerAPI } from '@/lib/api'
+import { centerAPI, authAPI } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+
+function getIsFranchise(): boolean {
+  if (typeof window === 'undefined') return false
+  try {
+    // login.tsx sets: document.cookie = `userRole=${role}; ...`
+    const cookieRole = document.cookie.replace(
+      /(?:(?:^|.*;\s*)userRole\s*=\s*([^;]*).*$)|^.*$/,
+      '$1'
+    )
+    if (cookieRole && cookieRole.toLowerCase() === 'franchise') return true
+
+    const lsRole = localStorage.getItem('userRole') || ''
+    return lsRole.toLowerCase() === 'franchise'
+  } catch {
+    return false
+  }
+}
 
 export default function CentersPage() {
   const [centers, setCenters] = useState<any[]>([])
@@ -13,6 +30,11 @@ export default function CentersPage() {
   const [error, setError] = useState('')
   const router = useRouter()
   const [message, setMessage] = useState('')
+  const [isFranchise, setIsFranchise] = useState(false)
+
+  useEffect(() => {
+    setIsFranchise(getIsFranchise())
+  }, [])
 
   const fetchCenters = async () => {
     setLoading(true)
@@ -30,6 +52,23 @@ export default function CentersPage() {
   useEffect(() => {
     fetchCenters()
   }, [])
+
+  // If franchise, fetch profile and filter centers client-side to the logged-in user's email
+  useEffect(() => {
+    const applyFranchiseFilter = async () => {
+      if (!isFranchise) return
+      try {
+        const profileRes = await authAPI.getProfile(document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, '$1'))
+        const profileEmail = profileRes?.data?.email || profileRes?.email || ''
+        if (profileEmail && centers.length > 0) {
+          setCenters((prev) => prev.filter((c: any) => String(c.email || '').toLowerCase() === String(profileEmail).toLowerCase()))
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+    applyFranchiseFilter()
+  }, [isFranchise, centers])
 
   const handleDeactivate = async (id: number) => {
     setError('')
@@ -65,15 +104,17 @@ export default function CentersPage() {
     <div className='listing-page'>
       <div className='listing-header'>
         <h1 className='listing-title'>Centers</h1>
-        <Link href='/apps/centers/new'>
-          <Button className='dashboard-add-btn'>Add Center</Button>
-        </Link>
+        {!isFranchise && (
+          <Link href='/apps/centers/new'>
+            <Button className='dashboard-add-btn'>Add Center</Button>
+          </Link>
+        )}
       </div>
 
       {error && <div className='listing-alert-error'>{error}</div>}
       {message && <div className='listing-alert-success'>{message}</div>}
 
-      <p className='listing-subtitle'>All Centers</p>
+      <p className='listing-subtitle'>{isFranchise ? 'My Center' : 'All Centers'}</p>
 
       {loading ? (
         <div className='listing-loading'>Loading...</div>
@@ -94,7 +135,9 @@ export default function CentersPage() {
             <tbody>
               {centers.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className='listing-empty'>No centers found.</td>
+                  <td colSpan={7} className='listing-empty'>
+                    No centers found.
+                  </td>
                 </tr>
               ) : (
                 centers.map((c, idx) => (
@@ -111,15 +154,34 @@ export default function CentersPage() {
                     </td>
                     <td className='listing-td-actions'>
                       <div className='flex items-center gap-2'>
-                        <Button variant='outline' size='sm' onClick={() => router.push(`/apps/centers/new?id=${c.id}`)} disabled={!!actionLoading[c.id]}>Edit</Button>
-                        {c.isActive ? (
-                          <Button variant='destructive' size='sm' onClick={() => handleDeactivate(c.id)} disabled={!!actionLoading[c.id]}>
-                            {actionLoading[c.id] ? '...' : 'Deactivate'}
-                          </Button>
-                        ) : (
-                          <Button variant='success' size='sm' onClick={() => handleActivate(c.id)} disabled={!!actionLoading[c.id]}>
-                            {actionLoading[c.id] ? '...' : 'Activate'}
-                          </Button>
+                        <Button
+                          variant='outline'
+                          size='sm'
+                          onClick={() => router.push(`/apps/centers/new?id=${c.id}`)}
+                          disabled={!!actionLoading[c.id]}
+                        >
+                          Edit
+                        </Button>
+                        {!isFranchise && (
+                          c.isActive ? (
+                            <Button
+                              variant='destructive'
+                              size='sm'
+                              onClick={() => handleDeactivate(c.id)}
+                              disabled={!!actionLoading[c.id]}
+                            >
+                              {actionLoading[c.id] ? '...' : 'Deactivate'}
+                            </Button>
+                          ) : (
+                            <Button
+                              variant='success'
+                              size='sm'
+                              onClick={() => handleActivate(c.id)}
+                              disabled={!!actionLoading[c.id]}
+                            >
+                              {actionLoading[c.id] ? '...' : 'Activate'}
+                            </Button>
+                          )
                         )}
                       </div>
                     </td>
