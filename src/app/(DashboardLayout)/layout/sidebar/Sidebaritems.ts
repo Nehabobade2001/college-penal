@@ -68,7 +68,7 @@ const SidebarContent: MenuItem[] = [
       { id: uniqueId(), name: 'Active Courses', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
       { id: uniqueId(), name: 'Monthly Admissions', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
       { id: uniqueId(), name: 'Total Revenue (All Centers)', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
-      { id: uniqueId(), name: 'Pending Complaints', icon: 'solar:chart-line-duotone', url: '#', disabled: true },
+      { id: uniqueId(), name: 'Pending Complaints', icon: 'solar:chart-line-duotone', url: '/masters/complaints', disabled: false, apiRoute: 'GET /complaints' },
     ],
   },
   {

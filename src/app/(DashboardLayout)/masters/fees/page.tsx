@@ -77,7 +77,11 @@ export default function FeesPage() {
                 payments.map((p, idx) => (
                   <tr key={p.id} className='listing-tbody-tr'>
                     <td className='listing-td'>{idx + 1}</td>
-                    <td className='listing-td'>{p.receiptNumber || '-'}</td>
+                    <td className='listing-td'>
+                      {p.receiptNumber
+                        ? (p.receiptNumber.replace(/\D/g, '') || p.receiptNumber)
+                        : '-'}
+                    </td>
                     <td className='listing-td'>{p.student ? `${p.student.firstName || ''} ${p.student.lastName || ''}`.trim() : '-'}</td>
                     <td className='listing-td'>{p.amount != null ? p.amount : '-'}</td>
                     <td className='listing-td'>{p.paymentDate ? new Date(p.paymentDate).toLocaleDateString() : '-'}</td>

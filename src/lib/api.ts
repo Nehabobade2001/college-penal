@@ -814,3 +814,92 @@ export const permissionAPI = {
     return res.json()
   },
 }
+
+
+export const complaintAPI = {
+  list: async (filter?: Record<string, any>, token?: string) => {
+    const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
+    const qs = filter ? '?' + new URLSearchParams(filter as any).toString() : ''
+    const res = await fetch(`${API_URL}/complaints${qs}`, {
+      headers: authToken ? { Authorization: `Bearer ${authToken}` } : undefined,
+    })
+    return res.json()
+  },
+
+  paginated: async (params: Record<string, any>, filter?: Record<string, any>, token?: string) => {
+    const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
+    const merged = { ...(params || {}), ...(filter || {}) }
+    const qs = '?' + new URLSearchParams(merged as any).toString()
+    const res = await fetch(`${API_URL}/complaints/paginated${qs}`, {
+      headers: authToken ? { Authorization: `Bearer ${authToken}` } : undefined,
+    })
+    return res.json()
+  },
+
+  create: async (payload: any, token?: string) => {
+    const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
+    const res = await fetch(`${API_URL}/complaints`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+      body: JSON.stringify(payload),
+    })
+    return res.json()
+  },
+
+  get: async (id: number, token?: string) => {
+    const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
+    const res = await fetch(`${API_URL}/complaints/${id}`, {
+      headers: authToken ? { Authorization: `Bearer ${authToken}` } : undefined,
+    })
+    return res.json()
+  },
+
+  update: async (id: number, payload: any, token?: string) => {
+    const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
+    const res = await fetch(`${API_URL}/complaints/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+      body: JSON.stringify(payload),
+    })
+    return res.json()
+  },
+
+  assignToCenter: async (id: number, centerId: number, assignedTo?: number, token?: string) => {
+    const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
+    const res = await fetch(`${API_URL}/complaints/${id}/assign`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+      body: JSON.stringify({ centerId, assignedTo }),
+    })
+    return res.json()
+  },
+
+  resolve: async (id: number, resolution: string, token?: string) => {
+    const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
+    const res = await fetch(`${API_URL}/complaints/${id}/resolve`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+      body: JSON.stringify({ resolution }),
+    })
+    return res.json()
+  },
+
+  close: async (id: number, token?: string) => {
+    const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
+    const res = await fetch(`${API_URL}/complaints/${id}/close`, {
+      method: 'PATCH',
+      headers: { ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+    })
+    return res.json()
+  },
+
+  remove: async (id: number, token?: string) => {
+    const authToken = token || (typeof document !== 'undefined' ? document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*\=\s*([^;]*).*$)|^.*$/, "$1") : '')
+    const res = await fetch(`${API_URL}/complaints/${id}`, {
+      method: 'DELETE',
+      headers: { ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+    })
+    if (res.status === 204) return { success: true }
+    return res.json()
+  },
+}
