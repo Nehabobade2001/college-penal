@@ -1,9 +1,24 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { studentAPI } from '@/lib/api'
+import { studentAPI, centerAPI } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { useRouter, useSearchParams } from 'next/navigation'
+
+function getIsFranchise(): boolean {
+  if (typeof window === 'undefined') return false
+  try {
+    const cookieRole = document.cookie.replace(
+      /(?:(?:^|.*;\s*)userRole\s*=\s*([^;]*).*$)|^.*$/,
+      '$1'
+    )
+    if (cookieRole && cookieRole.toLowerCase() === 'franchise') return true
+    const lsRole = localStorage.getItem('userRole') || ''
+    return lsRole.toLowerCase() === 'franchise'
+  } catch {
+    return false
+  }
+}
 
 export default function StudentFormPage() {
   const [name, setName] = useState('')
@@ -47,11 +62,15 @@ export default function StudentFormPage() {
   const router = useRouter()
   const params = useSearchParams()
   const id = params?.get('id')
+  const [isFranchise, setIsFranchise] = useState(false)
+
+  useEffect(() => {
+    setIsFranchise(getIsFranchise())
+  }, [])
 
   const fetchStudent = async (idVal: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002/api'}/students/${idVal}`)
-      const data = await res.json()
+      const data = await studentAPI.get(Number(idVal))
       if (data) {
         // Map backend fields to form
         setFirstName(data.firstName || data.name || '')
@@ -59,7 +78,7 @@ export default function StudentFormPage() {
         setGender(data.gender || '')
         setDateOfBirth(data.dateOfBirth ? data.dateOfBirth.split('T')[0] : '')
         setEmail(data.email || '')
-        setMobileNumber(data.mobileNumber || '')
+        setMobileNumber(data.mobileNumber || String(data.mobileNo || ''))
         setAddress(data.address || '')
         setCity(data.city || '')
         setStateVal(data.state || '')
@@ -85,26 +104,23 @@ export default function StudentFormPage() {
     }
   }
 
+
   const fetchCenters = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002/api'}/centers`)
-      if (!res.ok) {
-        console.error('Centers API error:', res.status)
-        return
-      }
-      const data = await res.json()
-      console.log('Centers API response:', data)
-      
-      // Handle different response formats
-      if (Array.isArray(data)) {
-        setCenters(data)
-      } else if (data.data && Array.isArray(data.data)) {
-        setCenters(data.data)
-      } else if (data.centers && Array.isArray(data.centers)) {
-        setCenters(data.centers)
-      } else {
-        console.error('Unexpected centers data format:', data)
-        setCenters([])
+      // centerAPI.list() automatically sends the JWT token from cookies,
+      // so backend returns only the logged-in franchise user's center (or all for admin)
+      const data = await centerAPI.list()
+
+      let list: any[] = []
+      if (Array.isArray(data)) list = data
+      else if (data.data && Array.isArray(data.data)) list = data.data
+      else if (data.centers && Array.isArray(data.centers)) list = data.centers
+
+      setCenters(list)
+
+      // Auto-preselect when only one center comes back (franchise user scenario)
+      if (list.length === 1) {
+        setCenterId(String(list[0].id))
       }
     } catch (e) {
       console.error('Failed to fetch centers:', e)
@@ -123,7 +139,7 @@ export default function StudentFormPage() {
     if (email && !/^\S+@\S+\.\S+$/.test(email)) e.email = 'Enter a valid email'
     if (!enrollmentNumber || enrollmentNumber.trim().length === 0) e.enrollmentNumber = 'Enrollment number is required'
     if (!courseName || courseName.trim().length === 0) e.courseName = 'Course name is required'
-    
+
     if (!id) {
       if (!password || password.length < 6) e.password = 'Password must be at least 6 characters'
       if (password !== confirmPassword) e.confirmPassword = 'Passwords do not match'
@@ -131,7 +147,7 @@ export default function StudentFormPage() {
       if (password.length < 6) e.password = 'Password must be at least 6 characters'
       if (password !== confirmPassword) e.confirmPassword = 'Passwords do not match'
     }
-    
+
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -173,7 +189,7 @@ export default function StudentFormPage() {
 
         status,
       }
-      
+
       if (!id || password) {
         payload.password = password
         payload.confirmPassword = confirmPassword
@@ -279,19 +295,30 @@ export default function StudentFormPage() {
             </div>
 
             <div>
-              <label className='block mb-2 text-sm form-label'>Center {centers.length > 0 && `(${centers.length} available)`}</label>
-              <select className='form-select' value={centerId} onChange={(e) => setCenterId(e.target.value)} style={{color: '#000'}}>
-                <option value='' style={{color: '#000', backgroundColor: '#fff'}}>Select Center</option>
+              <label className='block mb-2 text-sm form-label'>
+                Center {centers.length > 0 && `(${centers.length} available)`}
+              </label>
+              <select
+                className='form-select'
+                value={centerId}
+                onChange={(e) => setCenterId(e.target.value)}
+                disabled={isFranchise}
+                style={{ color: '#000', opacity: isFranchise ? 0.7 : 1 }}
+              >
+                <option value='' style={{ color: '#000', backgroundColor: '#fff' }}>Select Center</option>
                 {centers.length > 0 ? (
                   centers.map((center) => (
-                    <option key={center.id} value={center.id} style={{color: '#000', backgroundColor: '#fff'}}>
+                    <option key={center.id} value={center.id} style={{ color: '#000', backgroundColor: '#fff' }}>
                       {center.franchiseName || center.name || center.centerName || `Center ${center.id}`}
                     </option>
                   ))
                 ) : (
-                  <option disabled style={{color: '#666', backgroundColor: '#fff'}}>No centers available</option>
+                  <option disabled style={{ color: '#666', backgroundColor: '#fff' }}>No centers available</option>
                 )}
               </select>
+              {isFranchise && centerId && (
+                <p className='text-xs text-gray-500 mt-1'>Center is auto-selected based on your account.</p>
+              )}
               {centers.length === 0 && <div className='text-sm text-yellow-600 mt-1'>Check console for API response</div>}
             </div>
 

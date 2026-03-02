@@ -131,6 +131,16 @@ export const studentAPI = {
     })
     return res.json()
   },
+
+  get: async (id: number) => {
+    const authToken = typeof document !== 'undefined'
+      ? (document.cookie.split('; ').find((r: string) => r.startsWith('accessToken=')) || '').replace('accessToken=', '')
+      : ''
+    const res = await fetch(`${API_URL}/students/${id}`, {
+      headers: authToken ? { Authorization: `Bearer ${authToken}` } : undefined,
+    })
+    return res.json()
+  },
 }
 
 export const categoryAPI = {

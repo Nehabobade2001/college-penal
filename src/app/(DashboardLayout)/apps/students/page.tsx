@@ -6,6 +6,21 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
+function getIsFranchise(): boolean {
+  if (typeof window === 'undefined') return false
+  try {
+    const cookieRole = document.cookie.replace(
+      /(?:(?:^|.*;\s*)userRole\s*=\s*([^;]*).*$)|^.*$/,
+      '$1'
+    )
+    if (cookieRole && cookieRole.toLowerCase() === 'franchise') return true
+    const lsRole = localStorage.getItem('userRole') || ''
+    return lsRole.toLowerCase() === 'franchise'
+  } catch {
+    return false
+  }
+}
+
 export default function StudentsPage() {
   const [students, setStudents] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
@@ -13,6 +28,11 @@ export default function StudentsPage() {
   const [error, setError] = useState('')
   const router = useRouter()
   const [message, setMessage] = useState('')
+  const [isFranchise, setIsFranchise] = useState(false)
+
+  useEffect(() => {
+    setIsFranchise(getIsFranchise())
+  }, [])
 
   const fetchStudents = async () => {
     setLoading(true)
@@ -73,7 +93,7 @@ export default function StudentsPage() {
       {error && <div className='listing-alert-error'>{error}</div>}
       {message && <div className='listing-alert-success'>{message}</div>}
 
-      <p className='listing-subtitle'>All Students</p>
+      <p className='listing-subtitle'>{isFranchise ? "My Center's Students" : 'All Students'}</p>
 
       {loading ? (
         <div className='listing-loading'>Loading...</div>
@@ -114,16 +134,46 @@ export default function StudentsPage() {
                     </td>
                     <td className='listing-td'>
                       {s.previousMarksheet || s.previousMarksheetUrl || s.profilePhoto || s.documentUrl ? (
-                        <a className='text-blue-500 dark:text-blue-400 underline text-sm' href={s.previousMarksheet || s.previousMarksheetUrl || s.profilePhoto || s.documentUrl} target='_blank' rel='noreferrer'>View</a>
+                        <a
+                          className='text-blue-500 dark:text-blue-400 underline text-sm'
+                          href={s.previousMarksheet || s.previousMarksheetUrl || s.profilePhoto || s.documentUrl}
+                          target='_blank'
+                          rel='noreferrer'
+                        >
+                          View
+                        </a>
                       ) : '-'}
                     </td>
                     <td className='listing-td-actions'>
                       <div className='flex gap-2'>
-                        <Button variant='outline' size='sm' onClick={() => router.push(`/apps/students/new?id=${s.id}`)} disabled={!!actionLoading[s.id]}>Edit</Button>
-                        {s.isActive ? (
-                          <Button variant='destructive' size='sm' onClick={() => handleDeactivate(s.id)} disabled={!!actionLoading[s.id]}>{actionLoading[s.id] ? '...' : 'Deactivate'}</Button>
-                        ) : (
-                          <Button variant='success' size='sm' onClick={() => handleActivate(s.id)} disabled={!!actionLoading[s.id]}>{actionLoading[s.id] ? '...' : 'Activate'}</Button>
+                        <Button
+                          variant='outline'
+                          size='sm'
+                          onClick={() => router.push(`/apps/students/new?id=${s.id}`)}
+                          disabled={!!actionLoading[s.id]}
+                        >
+                          Edit
+                        </Button>
+                        {!isFranchise && (
+                          s.isActive ? (
+                            <Button
+                              variant='destructive'
+                              size='sm'
+                              onClick={() => handleDeactivate(s.id)}
+                              disabled={!!actionLoading[s.id]}
+                            >
+                              {actionLoading[s.id] ? '...' : 'Deactivate'}
+                            </Button>
+                          ) : (
+                            <Button
+                              variant='success'
+                              size='sm'
+                              onClick={() => handleActivate(s.id)}
+                              disabled={!!actionLoading[s.id]}
+                            >
+                              {actionLoading[s.id] ? '...' : 'Activate'}
+                            </Button>
+                          )
                         )}
                       </div>
                     </td>
